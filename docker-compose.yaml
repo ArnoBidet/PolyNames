@@ -1,0 +1,14 @@
+version: '3.8'
+
+services:
+  xampp:
+    image: tomsik68/xampp
+    container_name: polynames
+    ports:
+      - "3306:3306"
+      - "8080:80"
+    volumes:
+      - mysql:/opt/lampp/var/mysql
+    restart: always
+volumes:
+  mysql:
