@@ -44,6 +44,12 @@ public class GuessDao extends GenericDao{
         return result;
     }
 
+    public void deleteGuess(String game_code) throws SQLException {
+        PreparedStatement statement = this.database.prepareStatement("DELETE FROM Guess WHERE game_code = ?");
+        statement.setString(1, game_code);
+        statement.executeUpdate();
+    }
+
     private Guess generateGuessFromResultSet(ResultSet results) throws SQLException {
         final String game_code = results.getString("game_code");
         final int game_round = results.getInt("game_round");

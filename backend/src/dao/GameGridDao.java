@@ -46,6 +46,12 @@ public class GameGridDao extends GenericDao {
         statement.executeBatch();
     }
 
+    public void deleteGameGrid(String game_code) throws SQLException {
+        PreparedStatement statement = this.database.prepareStatement("DELETE FROM GameGrid WHERE game_code = ?");
+        statement.setString(1, game_code);
+        statement.executeUpdate();
+    }
+
     private GameGrid generateGameGridFromResultSet(ResultSet results) throws SQLException {
         final String game_code = results.getString("game_code");
         final int grid_row = results.getInt("grid_row");

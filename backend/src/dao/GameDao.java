@@ -26,6 +26,12 @@ public class GameDao extends GenericDao {
 		return null;
 	}
 
+	public void deleteGame(String id) throws SQLException {
+		PreparedStatement statement = this.database.prepareStatement("DELETE FROM Game WHERE game_code = ?");
+		statement.setString(1, id);
+		statement.executeUpdate();
+	}
+
 	private Game generateGameDaoFromResultSet(ResultSet results) throws SQLException {
 		final String game_code = results.getString("game_code");
 		return new Game(game_code);

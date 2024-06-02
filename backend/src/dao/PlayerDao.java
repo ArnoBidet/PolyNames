@@ -24,6 +24,12 @@ public class PlayerDao extends GenericDao {
         statement.setString(1, cookie);
     }
 
+    public void deletePlayerFromGame(String game_code) throws SQLException {
+        PreparedStatement statement = this.database.prepareStatement("DELETE FROM Player WHERE game_code = ?");
+        statement.setString(1, game_code);
+        statement.executeUpdate();
+    }
+
     private Player generatePlayerFromResultSet(ResultSet results) throws SQLException {
         final String cookie = results.getString("cookie");
         final boolean host = results.getBoolean("host");
