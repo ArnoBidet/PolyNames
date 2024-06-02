@@ -3,6 +3,8 @@ package dao;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import model.Guess;
 
@@ -29,6 +31,17 @@ public class GuessDao extends GenericDao{
         statement.setString(3, game_code);
         statement.setInt(4, game_round);
         statement.executeUpdate();
+    }
+
+    public List<Guess> getGuesses(String game_code) throws SQLException {
+        PreparedStatement statement = this.database.prepareStatement("SELECT * FROM Guess WHERE game_code = ?");
+        statement.setString(1, game_code);
+        ResultSet results = statement.executeQuery();
+        List<Guess> result = new ArrayList<Guess>();
+        while(results.next()){
+            result.add(this.generateGuessFromResultSet(results));
+        }
+        return result;
     }
 
     private Guess generateGuessFromResultSet(ResultSet results) throws SQLException {
