@@ -1,23 +1,33 @@
 package dao;
 
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.UUID;
 
 import database.PolyNameDatabase;
+import model.Game;
 
-public abstract class GameDao {
+public class GameDao extends GenericDao {
+
 	protected database.MySQLDatabase database;
 
-	public void GameDao() {
-		
-			this.database = new PolyNameDatabase();
+	public GameDao() {
+		super();
+	}
 
-			String id = UUID.randomUUID().toString().substring(0,8);
+	public void createGame(String id) throws SQLException {
 
-			PreparedStatement statement = this.database.prepareStatement("INSERT INTO Game (game_code) VALUES (?)");
-			statement.setString(1, id);
+		this.database = new PolyNameDatabase();
 
-		
+		PreparedStatement statement = this.database.prepareStatement("INSERT INTO Game (game_code) VALUES (?)");
+		statement.setString(1, id);
+
+	}
+
+	private Game generateGameDaoFromResultSet(ResultSet results) throws SQLException {
+		final String game_code = results.getString("game_code");
+
+		return new Game(game_code);
+
 	}
 }
