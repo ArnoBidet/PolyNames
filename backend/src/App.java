@@ -1,3 +1,4 @@
+import controller.GameController;
 import webserver.WebServer;
 import webserver.WebServerContext;
 
@@ -8,7 +9,7 @@ public class App {
         webserver.getRouter().get(
                 "/api/new-game",
                 (WebServerContext context) -> {
-                    GameController.createGame();
+                    GameController.createGame(context);
                 });
         webserver.listen(port_number);
     }

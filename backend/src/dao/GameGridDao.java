@@ -1,11 +1,20 @@
 package dao;
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import database.PolyNameDatabase;
 import model.GameGrid;
 
-public class GameGridDao {
+public class GameGridDao extends GenericDao {
+
+    protected database.MySQLDatabase database;
+
+    public GameGridDao() {
+        super();
+    }
+
     
     private GameGrid generateGameGridFromResultSet(ResultSet results) throws SQLException {
         final String game_code = results.getString("game_code");
