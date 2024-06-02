@@ -6,9 +6,9 @@ public class App {
         WebServer webserver = new WebServer();
         final int port_number = 8081;
         webserver.getRouter().get(
-                "/hello_world",
+                "/api/new-game",
                 (WebServerContext context) -> {
-                    context.getResponse().ok("Hello, world!");
+                    GameController.createGame();
                 });
         webserver.listen(port_number);
     }
