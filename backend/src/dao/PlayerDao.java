@@ -5,8 +5,7 @@ import java.sql.SQLException;
 
 import model.GameGrid;
 
-public class GameGridDao {
-    
+public class PlayerDao {
     private GameGrid generateGameGridFromResultSet(ResultSet results) throws SQLException {
         final String game_code = results.getString("game_code");
         final int grid_row = results.getInt("grid_row");
