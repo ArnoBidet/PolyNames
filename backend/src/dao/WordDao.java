@@ -11,7 +11,6 @@ import model.Word;
 
 public class WordDao extends GenericDao {
 
-    protected database.MySQLDatabase database;
 
     public WordDao() {
         super();
