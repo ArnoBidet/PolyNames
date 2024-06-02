@@ -3,6 +3,7 @@ package webserver;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.HashMap;
+import java.util.List;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -35,6 +36,24 @@ public class WebServerRequest {
 
     public String getParam(String key) {
         return this.params.get(key);
+    }
+
+    public String getCookie(String key) {
+        List<String> cookies = this.getCookies();
+        if(cookies == null)
+            return null;
+
+        for (String cookie : cookies) {
+            String[] parts = cookie.split("=");
+            if (parts[0].equals(key)) {
+                return parts[1];
+            }
+        }
+        return null;
+    }
+
+    public List<String> getCookies() {
+        return this.exchange.getRequestHeaders().get("Cookie");
     }
 
     @SuppressWarnings("unchecked")

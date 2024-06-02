@@ -49,6 +49,11 @@ public class WebServerResponse {
         }
     }
 
+    public void addCookie(String key, String value) {
+        Headers headers = this.exchange.getResponseHeaders();
+        headers.add("Set-Cookie", key + "=" + value);
+    }
+
     private void initCors() {
         Headers headers = this.exchange.getResponseHeaders();
         headers.add("Access-Control-Allow-Origin", "*");
