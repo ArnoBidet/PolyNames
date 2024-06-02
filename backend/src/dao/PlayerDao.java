@@ -19,6 +19,12 @@ public class PlayerDao extends GenericDao{
         statement.executeUpdate();
     }
 
+    public PlayerDao(){
+        super();
+    }
+
+
+
     private Player generatePlayerFromResultSet(ResultSet results) throws SQLException {
         final String cookie = results.getString("cookie");
         final boolean host = results.getBoolean("host");
