@@ -10,8 +10,6 @@ import database.PolyNameDatabase;
 import model.Word;
 
 public class WordDao extends GenericDao {
-
-
     public WordDao() {
         super();
     }
