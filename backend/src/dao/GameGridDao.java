@@ -8,14 +8,25 @@ import database.PolyNameDatabase;
 import model.GameGrid;
 
 public class GameGridDao extends GenericDao {
+    
 
-    protected database.MySQLDatabase database;
 
-    public GameGridDao() {
+    public GameGridDao(){
         super();
     }
 
-    
+    public void createGameGrid() throws SQLException{
+
+        this.database = new PolyNameDatabase();
+
+        PreparedStatement statement = this.database.prepareStatement("");
+        
+
+    }
+
+
+
+
     private GameGrid generateGameGridFromResultSet(ResultSet results) throws SQLException {
         final String game_code = results.getString("game_code");
         final int grid_row = results.getInt("grid_row");
