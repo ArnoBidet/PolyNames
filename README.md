@@ -21,10 +21,25 @@ GRANT ALL ON *.* to "root"@"%" IDENTIFIED BY 'password';
 
 Maintenant on peut commencer.
 
-## Modélisation
+## Conception
 
 La lecture du sujet laisse supposé une structure de la base de donnée bien moins complexe qu'elle ne le sera finalement. On distingue bien les entitées, mais le fonctionnement effectif, l'aspect fonctionnel, implique sur le plan technique une surcharge d'information à enregistrer en base de donnée.
 Cette surcharge aurait pu facilement être évitée si on avait exploité la notion de session côté serveur. Mais puisque l'on ne l'a pas vu en cours, nous nous en passerons
+
+Voici le diagramme de entités-associations auquel nous avons abouti :
+
+<img src="./conception.png" style="background-color:white; padding : 10px;">
+
+Et son modèle relationnel résultant :
+
+
+Game (<u>game_code</u>)
+
+Player (<u>cookie</u>, host, player_role, <i>game_code</i>)
+
+GameGrid (<u><i>game_code</i></u>, <u>grid_row</u>, <u>grid_col</u>, <i>word_id</i>, card_type, is_discovered)
+
+Word (<u>id</u>,word)
 
 
 ## Considérations de fonctionnalitées pour l'API
