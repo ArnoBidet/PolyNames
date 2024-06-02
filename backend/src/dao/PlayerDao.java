@@ -3,16 +3,16 @@ package dao;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import model.GameGrid;
+import model.Player;
 
 public class PlayerDao {
-    private GameGrid generateGameGridFromResultSet(ResultSet results) throws SQLException {
+    
+    private Player generatePlayerFromResultSet(ResultSet results) throws SQLException {
+        final String cookie = results.getString("cookie");
+        final boolean host = results.getBoolean("host");
+        final String player_role = results.getString("player_role");
         final String game_code = results.getString("game_code");
-        final int grid_row = results.getInt("grid_row");
-        final int grid_col = results.getInt("grid_col");
-        final int word_id = results.getInt("word_id");
-        final String card_type = results.getString("card_type");
-        final Boolean is_discovered = results.getBoolean("is_discovered");
-        return new GameGrid(game_code,grid_row,grid_col,word_id,card_type,is_discovered);
+        return new Player(cookie,host,player_role,game_code);
     }
 }
+
