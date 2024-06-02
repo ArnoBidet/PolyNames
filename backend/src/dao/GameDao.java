@@ -16,6 +16,16 @@ public class GameDao extends GenericDao {
 		statement.setString(1, id);
 	}
 
+	public Game getGame(String id) throws SQLException {
+		PreparedStatement statement = this.database.prepareStatement("SELECT game_code FROM Game WHERE game_code = ?");
+		statement.setString(1, id);
+		ResultSet results = statement.executeQuery();
+		if (results.next()) {
+			return generateGameDaoFromResultSet(results);
+		}
+		return null;
+	}
+
 	private Game generateGameDaoFromResultSet(ResultSet results) throws SQLException {
 		final String game_code = results.getString("game_code");
 		return new Game(game_code);
