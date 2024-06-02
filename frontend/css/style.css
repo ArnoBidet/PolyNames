@@ -1,0 +1,90 @@
+body {
+    background: linear-gradient(45deg, rgba(92,85,210,1) 0%, rgba(92,9,121,1) 44%, rgba(255,0,44,1) 100%);
+    background-size: cover;
+    background-position: center;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: rgb(240, 151, 151);
+    font-size: 2rem;
+    font-weight: bold;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    text-align: center;
+    margin: 0;
+}
+
+#landing-page .button-container{
+    display: flex;
+    justify-content: center;
+    /* align-items: center; */
+}
+
+#landing-page button{
+    background: linear-gradient(90deg, #f12711 0%,#f5af19 100%);
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    color: white;
+    font-size: 1.5rem;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 20px;
+    margin: 1rem;
+}
+
+#landing-page .button-container .vertical-separator{
+    background-color: rgba(55, 55, 55, 0.5);
+    width: 3px;
+    border-radius: 9999px;
+    height: auto;
+    margin: 1rem 0;
+}
+#landing-page .button-container .join-game-container{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+#landing-page .button-container .join-game-container input{
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-top: 20px;
+    margin: 1rem;
+    max-width: 9rem;
+}
+
+#landing-page button:hover{
+    scale: 1.02;
+    transition: scale 0.2s ease-out; 
+}
+
+
+.dialog-overlay{
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.5);
+    color: rgb(240, 151, 151);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.dialog-overlay .dialog-card{
+    background: linear-gradient(45deg,rgba(255,0,44,1) 0%, rgba(92,9,121,1) 44%,  rgba(92,85,210,1) 100%);
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    text-align: center;
+    
+}

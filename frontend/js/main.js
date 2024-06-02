@@ -1,16 +1,22 @@
 import { SSEClient } from "../libs/sse-client.js";
-import InGameView from "./view/in-game-view.js";
+import FormatErrorView from "./view/format-error-view.js";
+import LandingView from "./view/landing-view.js";
+
+let formatErrorView = new FormatErrorView();
 
 function run() {
-  let inGameView =  new InGameView();
-  inGameView.displayProducts();
-  const sseClient = new SSEClient("localhost:8080");
-  sseClient.connect();
+  let landingView = new LandingView();
+  landingView.renderLanding();
+  resize();
+}
 
-  sseClient.subscribe("bids", (data) => {
-    console.log(data);
-    productsView.updateBid(data);
-  });
+function resize() {
+  if (window.innerWidth < 1080 || window.innerHeight < 800)
+    formatErrorView.renderFormatError();
+  else
+    formatErrorView.removeError();
+
 }
 
 document.addEventListener("DOMContentLoaded", run);
+window.addEventListener("resize", resize);
