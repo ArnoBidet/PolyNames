@@ -22,7 +22,7 @@ CREATE TABLE IF NOT EXISTS Card (
     grid_col INTEGER CHECK (grid_col >= 0 AND grid_col < 5),
     word_id INTEGER,
     card_type VARCHAR(10) DEFAULT 'NEUTRAL'  CHECK (card_type IN ('NEUTRAL', 'ASSASSIN', 'WORD')),
-    is_discovered BOOLEAN DEFAULT FALSE,
+    is_done BOOLEAN DEFAULT FALSE,
     CONSTRAINT pk_game_cards PRIMARY KEY (game_code, grid_row, grid_col),
     CONSTRAINT uq_game_grid UNIQUE (game_code, grid_row, grid_col),
     CONSTRAINT fk_game_grid_word_id FOREIGN KEY (word_id) REFERENCES Word(id),
