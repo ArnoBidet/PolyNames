@@ -93,7 +93,7 @@ Requête :
 `Body`
 ```json
 {
-    "word" : "", // pas d'espace, mais pas d'autres vérifications, sinon trop complexe
+    "hint" : "", // pas d'espace, mais pas d'autres vérifications, sinon trop complexe
     "associated_guess" : 1 // range : [1;8]
 }
 ```
