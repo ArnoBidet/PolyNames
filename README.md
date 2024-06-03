@@ -53,12 +53,15 @@ Les clients sont identifiés par un cookie qui leur est assigné lors de la cré
 
 On fera en sorte que chaque partie n'ai qu'une WebSocket active. L'interface devra alors gérer plusieurs types de réponse de l'API. Plusieurs types de réponses sont à prévoir, avec plusieurs types de données présentes :
 
-- Nouvel indice proposé
+- `game-start` La partie commence
+- `new-hint` Nouvel indice proposé
   - Contient un mot et un nombre
-- Nouvelle carte révélée
+- `new-hint` Nouvelle carte révélée
   - Contient la coordonnée de la carte ainsi que son type (car le client qui devine n'a pas en session les données permettant seul de savoir si il a fini)
   - Le score mis à jour
 - Fin de partie (gagnée ou perdu)
+
+En somme, les messages WS permettent aux joueurs de savoir les grands évenements. On imaginera 
 
 ### Les routes
 

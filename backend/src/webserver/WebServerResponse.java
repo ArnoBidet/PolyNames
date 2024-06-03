@@ -23,6 +23,10 @@ public class WebServerResponse {
         this.send(404, message);
     }
 
+    public void badRequest(String message) {
+        this.send(400, message);
+    }
+
     public void serverError(String message) {
         this.send(500, message);
     }
