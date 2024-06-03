@@ -9,8 +9,16 @@ import java.util.List;
 import model.Hint;
 
 public class HintDao extends GenericDao{
-    public HintDao() {
+    private static HintDao hintDao;
+    private HintDao() {
         super();
+    }
+
+    public static HintDao getHintDao() {
+        if (hintDao == null) {
+            hintDao = new HintDao();
+        }
+        return hintDao;
     }
 
     public void createHint(String game_code, int game_round, String hint, int associated_cards) throws SQLException {
@@ -22,10 +30,10 @@ public class HintDao extends GenericDao{
         statement.executeUpdate();
     }
 
-    public void updateHint(String game_code, int game_round, int found_cards, boolean has_failed) throws SQLException {
-        PreparedStatement statement = this.database.prepareStatement("UPDATE Hint SET found_cards = ?, has_failed = ? WHERE game_code = ? AND game_round = ?");
+    public void updateHint(String game_code, int game_round, int found_cards, boolean is_done) throws SQLException {
+        PreparedStatement statement = this.database.prepareStatement("UPDATE Hint SET found_cards = ?, is_done = ? WHERE game_code = ? AND game_round = ?");
         statement.setInt(1, found_cards);
-        statement.setBoolean(2, has_failed);
+        statement.setBoolean(2, is_done);
         statement.setString(3, game_code);
         statement.setInt(4, game_round);
         statement.executeUpdate();
@@ -68,7 +76,7 @@ public class HintDao extends GenericDao{
         final String hint = results.getString("hint");
         final int associated_cards = results.getInt("associated_cards");
         final int found_cards = results.getInt("found_cards");
-        final boolean has_failed = results.getBoolean("has_failed");
-        return new Hint(game_code,game_round,hint,associated_cards,found_cards,has_failed);
+        final boolean is_done = results.getBoolean("is_done");
+        return new Hint(game_code,game_round,hint,associated_cards,found_cards,is_done);
     }
 }

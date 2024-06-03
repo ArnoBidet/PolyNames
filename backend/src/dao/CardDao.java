@@ -19,7 +19,7 @@ public class CardDao extends GenericDao {
     }
 
     public Card getCard(String game_id, int grid_row, int grid_col) throws SQLException {
-        PreparedStatement statement = this.database.prepareStatement("SELECT game_code, grid_row, grid_col, word_id, card_type, is_done FROM Card WHERE game_code = ? AND grid_row = ? AND grid_col = ?");
+        PreparedStatement statement = this.database.prepareStatement("SELECT game_code, grid_row, grid_col, word_id, card_type, is_discovered FROM Card WHERE game_code = ? AND grid_row = ? AND grid_col = ?");
         statement.setString(1, game_id);
         statement.setInt(2, grid_row);
         statement.setInt(3, grid_col);
@@ -31,7 +31,7 @@ public class CardDao extends GenericDao {
     }
 
     public List<Card> getCards(String game_id) throws SQLException {
-        PreparedStatement statement = this.database.prepareStatement("SELECT game_code, grid_row, grid_col, word_id, card_type, is_done FROM Card WHERE game_code = ?");
+        PreparedStatement statement = this.database.prepareStatement("SELECT game_code, grid_row, grid_col, word_id, card_type, is_discovered FROM Card WHERE game_code = ?");
         statement.setString(1, game_id);
         ResultSet results = statement.executeQuery();
         List<Card> result = new ArrayList<Card>();
@@ -70,7 +70,7 @@ public class CardDao extends GenericDao {
         final int grid_col = results.getInt("grid_col");
         final int word_id = results.getInt("word_id");
         final String card_type = results.getString("card_type");
-        final Boolean is_done = results.getBoolean("is_done");
-        return new Card(game_code, grid_row, grid_col, word_id, card_type, is_done);
+        final Boolean is_discovered = results.getBoolean("is_discovered");
+        return new Card(game_code, grid_row, grid_col, word_id, card_type, is_discovered);
     }
 }

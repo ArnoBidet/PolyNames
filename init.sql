@@ -22,7 +22,7 @@ CREATE TABLE IF NOT EXISTS Card (
     grid_col INTEGER CHECK (grid_col >= 0 AND grid_col < 5),
     word_id INTEGER,
     card_type VARCHAR(10) DEFAULT 'NEUTRAL'  CHECK (card_type IN ('NEUTRAL', 'ASSASSIN', 'WORD')),
-    is_done BOOLEAN DEFAULT FALSE,
+    is_discovered BOOLEAN DEFAULT FALSE,
     CONSTRAINT pk_game_cards PRIMARY KEY (game_code, grid_row, grid_col),
     CONSTRAINT uq_game_grid UNIQUE (game_code, grid_row, grid_col),
     CONSTRAINT fk_game_grid_word_id FOREIGN KEY (word_id) REFERENCES Word(id),
@@ -36,7 +36,7 @@ CREATE TABLE IF NOT EXISTS Hint (
     hint VARCHAR(27),
     associated_cards INTEGER CHECK (associated_cards >= 1 AND associated_cards <= 8),
     found_cards INTEGER DEFAULT 0 CHECK (found_cards >= 0 AND found_cards <= (associated_cards + 1)),
-    has_failed BOOLEAN DEFAULT FALSE,
+    is_done BOOLEAN DEFAULT FALSE,
     CONSTRAINT pk_hint PRIMARY KEY (game_code, game_round),
     CONSTRAINT fk_hint_game_code FOREIGN KEY (game_code) REFERENCES Game(game_code)
 );

@@ -27,6 +27,10 @@ public class WebServerResponse {
         this.send(400, message);
     }
 
+    public void forbidden(String message) {
+        this.send(403, message);
+    }
+
     public void serverError(String message) {
         this.send(500, message);
     }
