@@ -33,7 +33,7 @@ CREATE TABLE IF NOT EXISTS GameGrid (
 CREATE TABLE IF NOT EXISTS Guess (
     game_code CHAR(8),
     game_round INTEGER,
-    hint VARCHAR(40),
+    hint VARCHAR(27),
     associated_cards INTEGER CHECK (associated_cards >= 1 AND associated_cards <= 8),
     found_cards INTEGER CHECK (found_cards >= 0 AND found_cards <= (associated_cards + 1)),
     has_failed BOOLEAN DEFAULT FALSE,
