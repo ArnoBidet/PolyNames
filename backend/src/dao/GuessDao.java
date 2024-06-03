@@ -13,14 +13,12 @@ public class GuessDao extends GenericDao{
         super();
     }
 
-    public void createGuess(String game_code, int game_round, String hint, int associated_cards, int found_cards, boolean has_failed) throws SQLException {
-        PreparedStatement statement = this.database.prepareStatement("INSERT INTO Guess (game_code, game_round, hint, associated_cards, found_cards, has_failed) VALUES (?, ?, ?, ?, ?, ?)");
+    public void createGuess(String game_code, int game_round, String hint, int associated_cards) throws SQLException {
+        PreparedStatement statement = this.database.prepareStatement("INSERT INTO Guess (game_code, game_round, hint, associated_cards) VALUES (?, ?, ?, ?)");
         statement.setString(1, game_code);
         statement.setInt(2, game_round);
         statement.setString(3, hint);
         statement.setInt(4, associated_cards);
-        statement.setInt(5, found_cards);
-        statement.setBoolean(6, has_failed);
         statement.executeUpdate();
     }
 
