@@ -37,7 +37,7 @@ Game (<u>game_code</u>)
 
 Player (<u>cookie</u>, host, player_role, <i>game_code</i>)
 
-GameGrid (<u><i>game_code</i></u>, <u>grid_row</u>, <u>grid_col</u>, <i>word_id</i>, card_type, is_discovered)
+Card (<u><i>game_code</i></u>, <u>grid_row</u>, <u>grid_col</u>, <i>word_id</i>, card_type, is_discovered)
 
 Word (<u>id</u>,word)
 
@@ -96,7 +96,7 @@ Requête :
 `Body`
 ```json
 {
-    "word" : "", // pas d'espace, mais pas d'autres vérifications, sinon trop complexe
+    "hint" : "", // pas d'espace, mais pas d'autres vérifications, sinon trop complexe
     "associated_guess" : 1 // range : [1;8]
 }
 ```

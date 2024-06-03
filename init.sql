@@ -16,7 +16,7 @@ CREATE TABLE IF NOT EXISTS Player (
     CONSTRAINT fk_player_game_code FOREIGN KEY (game_code) REFERENCES Game(game_code)
 );
 
-CREATE TABLE IF NOT EXISTS GameGrid (
+CREATE TABLE IF NOT EXISTS Card (
     game_code CHAR(8),
     grid_row INTEGER CHECK (grid_row >= 0 AND grid_row < 5),
     grid_col INTEGER CHECK (grid_col >= 0 AND grid_col < 5),
