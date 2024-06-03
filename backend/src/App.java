@@ -1,5 +1,5 @@
 import controller.GameController;
-import controller.GuessController;
+import controller.HintController;
 import webserver.WebServer;
 import webserver.WebServerContext;
 
@@ -17,7 +17,7 @@ public class App {
         
         webserver.getRouter().get(
             "/api/:game_code/hint", (WebServerContext context)->{
-                    GuessController.createHint(context);
+                    HintController.createHint(context);
             });
         
         
