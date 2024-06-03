@@ -17,7 +17,7 @@ public class App {
         
         webserver.getRouter().get(
             "/api/:game_code/hint", (WebServerContext context)->{
-                    GuessController.createGuess(context);
+                    GuessController.createHint(context);
             });
         
         

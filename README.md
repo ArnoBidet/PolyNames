@@ -41,7 +41,7 @@ GameGrid (<u><i>game_code</i></u>, <u>grid_row</u>, <u>grid_col</u>, <i>word_id<
 
 Word (<u>id</u>,word)
 
-Guess(<u><i>game_code</i></u>, <u>game_round</u>, hint, associated_cards, found_cards, has_failed)
+Hint(<u><i>game_code</i></u>, <u>game_round</u>, hint, associated_cards, found_cards, has_failed)
 
 ## Considérations de fonctionnalitées pour l'API
 

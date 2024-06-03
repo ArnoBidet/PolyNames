@@ -30,13 +30,13 @@ CREATE TABLE IF NOT EXISTS GameGrid (
 );
 
 
-CREATE TABLE IF NOT EXISTS Guess (
+CREATE TABLE IF NOT EXISTS Hint (
     game_code CHAR(8),
     game_round INTEGER,
     hint VARCHAR(27),
     associated_cards INTEGER CHECK (associated_cards >= 1 AND associated_cards <= 8),
     found_cards INTEGER DEFAULT 0 CHECK (found_cards >= 0 AND found_cards <= (associated_cards + 1)),
     has_failed BOOLEAN DEFAULT FALSE,
-    CONSTRAINT pk_guess PRIMARY KEY (game_code, game_round),
-    CONSTRAINT fk_guess_game_code FOREIGN KEY (game_code) REFERENCES Game(game_code)
+    CONSTRAINT pk_hint PRIMARY KEY (game_code, game_round),
+    CONSTRAINT fk_hint_game_code FOREIGN KEY (game_code) REFERENCES Game(game_code)
 );

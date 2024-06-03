@@ -2,9 +2,9 @@ package controller;
 
 import java.sql.SQLException;
 
-import dao.GuessDao;
+import dao.HintDao;
 import dao.PlayerDao;
-import model.Guess;
+import model.Hint;
 import model.HintRequest;
 import model.Player;
 import model.PlayerRole;
@@ -12,16 +12,16 @@ import webserver.WebServerContext;
 import webserver.WebServerRequest;
 import webserver.WebServerResponse;
 
-public class GuessController {
-    private static GuessDao guessDao;
+public class HintController {
+    private static HintDao hintDao;
     private static PlayerDao playerDao;
 
-    private static GuessDao getGuessDao() {
+    private static HintDao getHintDao() {
 
-        if (guessDao == null) {
-            guessDao = new GuessDao();
+        if (hintDao == null) {
+            hintDao = new HintDao();
         }
-        return guessDao;
+        return hintDao;
 
     }
 
@@ -34,7 +34,7 @@ public class GuessController {
 
     }
 
-    public static void createGuess(WebServerContext context) {
+    public static void createHint(WebServerContext context) {
 
         WebServerRequest request = context.getRequest();
         WebServerResponse response = context.getResponse();
@@ -61,9 +61,9 @@ public class GuessController {
                 response.badRequest("Mauvais rôle !");
             }
 
-            Guess last_guess = guessDao.getLastGuess(game_id);
+            Hint last_hint = hintDao.getLastHint(game_id);
 
-            guessDao.createGuess(game_id, 0, role, last_guess != null ? last_guess.game_round() + 1 : 0);
+            hintDao.createHint(game_id, 0, role, last_hint != null ? last_hint.game_round() + 1 : 0);
 
             // @TODO finir la réponse avec le sse
 
