@@ -44,6 +44,20 @@ public class GuessDao extends GenericDao{
         return result;
     }
 
+
+    public Guess getLastGuess(String game_code)throws SQLException{
+
+        PreparedStatement statement = this.database.prepareStatement("SELECT * FROM Guess WHERE game_code = ? ORDER BY game_round DESC LIMIT 1");
+        statement.setString(1, game_code);
+        ResultSet results = statement.executeQuery();
+        
+        if(results.next()){
+            return this.generateGuessFromResultSet(results);
+        }
+        return null;
+
+    }
+
     public void deleteGuess(String game_code) throws SQLException {
         PreparedStatement statement = this.database.prepareStatement("DELETE FROM Guess WHERE game_code = ?");
         statement.setString(1, game_code);
