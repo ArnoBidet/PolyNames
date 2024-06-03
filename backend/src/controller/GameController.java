@@ -37,8 +37,9 @@ public class GameController {
         try {
             getGameDao().createGame(game_code);
             getPlayerDao().createPlayer(cookie);
-            
-
+            response.addCookie("user", cookie);
+            context.getSSE().emit("cookie", "{\"cookie\": \"" + cookie + "\"}");
+            response.ok("Partie créée avec succès");
         } catch (SQLException e) {
             response.serverError("Erreur lors de la création de la partie");
             System.err.println("Erreur lors de la création de la partie");
