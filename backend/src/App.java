@@ -7,7 +7,7 @@ public class App {
         WebServer webserver = new WebServer();
         final int port_number = 8081;
         webserver.getRouter().get(
-                "/api/test-cookie",
+                "/api/new-game",
                 (WebServerContext context) -> {
                     GameController.createGame(context);
                 });
