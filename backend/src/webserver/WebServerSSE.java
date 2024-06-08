@@ -4,6 +4,9 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
 public class WebServerSSE {
 
     private WebServerRouter router;
@@ -11,51 +14,48 @@ public class WebServerSSE {
     private HashMap<String, OutputStream> clientStreams;
     private HashMap<String, ArrayList<String>> channels;
 
-    public WebServerSSE(WebServerRouter router)
-    {
+    private HashMap<String, ArrayList<WebServerSSEEventHandler>> eventListeners;
+
+    public WebServerSSE(WebServerRouter router) {
         this.router = router;
 
         this.clientStreams = new HashMap<>();
         this.channels = new HashMap<>();
+        this.eventListeners = new HashMap<>();
 
         this.init();
     }
 
-    private void init()
-    {
-        router.get("/__sse/:clientId", (WebServerContext context) -> { this.connect(context);} );
-        router.post("/__sse/:clientId/channel/:channel", (WebServerContext context) -> { this.subscribe(context);} );
-        router.delete("/__sse/:clientId/channel/:channel", (WebServerContext context) -> { this.unsubscribe(context);} );
+    private void init() {
+        router.get("/__sse/:clientId", this::connect);
+        router.post("/__sse/:clientId/channel/:channel", this::subscribe);
+        router.delete("/__sse/:clientId/channel/:channel", this::unsubscribe);
     }
 
-    public void connect(WebServerContext context)
-    {
+    private void connect(WebServerContext context) {
         String clientId = context.getRequest().getParam("clientId");
         OutputStream outputStream = context.getResponse().openSSEStream();
 
         clientStreams.put(clientId, outputStream);
+
+        dispatchEvent(WebServerSSEEventType.CONNECT, new WebServerSSEEvent(WebServerSSEEventType.CONNECT, clientId, null));
     }
 
-    public void subscribe(WebServerContext context)
-    {
+    private void subscribe(WebServerContext context) {
         String clientId = context.getRequest().getParam("clientId");
         String channelName = context.getRequest().getParam("channel");
 
-        if(this.clientStreams.get(clientId) == null)
-        {
+        if (this.clientStreams.get(clientId) == null) {
             context.getResponse().notFound("Unknown Client ID");
             return;
         }
 
         ArrayList<String> channelUsers = this.channels.get(channelName);
 
-        if(channelUsers == null)
-        {
+        if (channelUsers == null) {
             channelUsers = new ArrayList<String>();
             this.channels.put(channelName, channelUsers);
-        }
-        else if(channelUsers.contains(clientId))
-        {
+        } else if (channelUsers.contains(clientId)) {
             context.getResponse().ok("Already subscribed to this channel");
             return;
         }
@@ -64,30 +64,26 @@ public class WebServerSSE {
 
         context.getResponse().ok("");
 
-        this.emit(channelName, String.format("New user: %s", clientId));
-    }    
+        dispatchEvent(WebServerSSEEventType.SUBSCRIBE, new WebServerSSEEvent(WebServerSSEEventType.SUBSCRIBE, clientId, channelName));
+    }
 
-    public void unsubscribe(WebServerContext context)
-    {
+    private void unsubscribe(WebServerContext context) {
         String clientId = context.getRequest().getParam("clientId");
         String channelName = context.getRequest().getParam("channel");
 
-        if(this.clientStreams.get(clientId) == null)
-        {
+        if (this.clientStreams.get(clientId) == null) {
             context.getResponse().notFound("Unknown Client ID");
             return;
         }
 
         ArrayList<String> channelUsers = this.channels.get(channelName);
 
-        if(channelUsers == null)
-        {
+        if (channelUsers == null) {
             context.getResponse().notFound("Unknown Channel");
             return;
         }
 
-        if(channelUsers.contains(clientId) == false)
-        {
+        if (channelUsers.contains(clientId) == false) {
             context.getResponse().notFound("Not subscribe to this channel");
             return;
         }
@@ -95,34 +91,56 @@ public class WebServerSSE {
         channelUsers.remove(clientId);
 
         context.getResponse().ok("");
+
+        dispatchEvent(WebServerSSEEventType.UNSUBSCRIBE, new WebServerSSEEvent(WebServerSSEEventType.UNSUBSCRIBE, clientId, channelName));
     }
 
-    public void emit(String channel, String message)
-    {
+    public void emit(String channel, Object data) {
         ArrayList<String> channelUsers = this.channels.get(channel);
 
-        if(channelUsers == null)
+        if (channelUsers == null)
             return;
 
-        for(String clientId: channelUsers)
-        {
-            this.emit(this.clientStreams.get(clientId), channel, message);
+        final GsonBuilder builder = new GsonBuilder();
+        final Gson gson = builder.create();
+
+        for (String clientId : channelUsers) {
+            this.emit(this.clientStreams.get(clientId), channel, gson.toJson(data));
         }
     }
 
-    private void emit(OutputStream stream, String channel, String message)
-    {
-        if(stream == null)
+    private void emit(OutputStream stream, String channel, String message) {
+        if (stream == null)
             return;
 
-        try{
-            stream.write(String.format("event: %s\ndata: %s", channel, message).getBytes());
+        try {
+            stream.write(String.format("event: %s\n", channel).getBytes());
+            stream.write(String.format("data: %s", message).getBytes());
             stream.write("\n\n".getBytes());
             stream.flush();
-        }
-        catch(Exception e)
-        {
+        } catch (Exception e) {
 
+        }
+    }
+
+    public void addEventListeners(WebServerSSEEventType eventType, WebServerSSEEventHandler handler)
+    {
+        if(this.eventListeners.containsKey(eventType.value) == false)
+            this.eventListeners.put(eventType.value, new ArrayList<WebServerSSEEventHandler>());
+
+        this.eventListeners.get(eventType.value).add(handler);
+    }
+
+    private void dispatchEvent(WebServerSSEEventType eventType, WebServerSSEEvent event)
+    {
+        ArrayList<WebServerSSEEventHandler> handlers = this.eventListeners.get(eventType.value);
+
+        if(handlers == null)
+            return;
+
+        for(WebServerSSEEventHandler handler: handlers)
+        {
+            handler.run(event);
         }
     }
 }

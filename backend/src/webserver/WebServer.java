@@ -62,4 +62,8 @@ public class WebServer {
     {
         context.getResponse().ok("");
     }
+
+    public final WebServerSSE getSSE() {
+        return sse;
+    }
 }
