@@ -73,7 +73,7 @@ public class WebServerResponse {
 
         try {
             this.initCors();
-
+            
             Headers responseHeaders = this.exchange.getResponseHeaders();
             responseHeaders.add("Content-Type", "text/event-stream");
             responseHeaders.add("Connection", "keep-alive");
