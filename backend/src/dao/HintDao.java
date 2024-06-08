@@ -15,7 +15,7 @@ public class HintDao extends GenericDao{
         super();
     }
 
-    public HintDao getDao(){
+    public static HintDao getDao(){
         if (instance == null) {
             instance = new HintDao();
         }

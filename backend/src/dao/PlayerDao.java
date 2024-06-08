@@ -12,7 +12,7 @@ public class PlayerDao extends GenericDao {
         super();
     }
 
-    public PlayerDao getDao(){
+    public static PlayerDao getDao(){
         if (instance == null) {
             instance = new PlayerDao();
         }

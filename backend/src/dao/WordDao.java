@@ -15,7 +15,7 @@ public class WordDao extends GenericDao {
         super();
     }
 
-    public WordDao getDao(){
+    public static WordDao getDao(){
         if (instance == null) {
             instance = new WordDao();
         }
