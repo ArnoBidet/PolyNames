@@ -9,9 +9,17 @@ import java.util.List;
 import database.PolyNameDatabase;
 import model.Word;
 
-public class WordDao extends GenericDao {
-    public WordDao() {
+public class WordDao extends GenericDao<WordDao> {
+    private WordDao() {
         super();
+    }
+
+    @Override
+    public WordDao getDao(){
+        if (instance == null) {
+            instance = new WordDao();
+        }
+        return instance;
     }
 
     public List<Word> getRandomList() throws SQLException {

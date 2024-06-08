@@ -6,10 +6,19 @@ import java.sql.SQLException;
 
 import model.Game;
 
-public class GameDao extends GenericDao {
-	public GameDao() {
+public class GameDao extends GenericDao<GameDao> {
+	protected static GameDao instance;
+	private GameDao() {
 		super();
 	}
+
+	@Override
+    public GameDao getDao(){
+        if (instance == null) {
+            instance = new GameDao();
+        }
+        return instance;
+    }
 
 	public void createGame(String id) throws SQLException {
 		PreparedStatement statement = this.database.prepareStatement("INSERT INTO Game (game_code) VALUES (?)");

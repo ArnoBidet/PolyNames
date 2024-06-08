@@ -9,13 +9,21 @@ import java.util.List;
 import model.Card;
 import model.Word;
 
-public class CardDao extends GenericDao {
+public class CardDao extends GenericDao<CardDao> {
     final int GRID_ROW = 5;
     final int GRID_COL = 5;
     protected database.MySQLDatabase database;
 
-    public CardDao(){
+    private CardDao(){
         super();
+    }
+
+    @Override
+    public CardDao getDao(){
+        if (instance == null) {
+            instance = new CardDao();
+        }
+        return instance;
     }
 
     public Card getCard(String game_id, int grid_row, int grid_col) throws SQLException {

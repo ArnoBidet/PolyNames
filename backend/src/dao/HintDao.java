@@ -8,17 +8,18 @@ import java.util.List;
 
 import model.Hint;
 
-public class HintDao extends GenericDao{
-    private static HintDao hintDao;
+public class HintDao extends GenericDao<HintDao>{
+
     private HintDao() {
         super();
     }
 
-    public static HintDao getHintDao() {
-        if (hintDao == null) {
-            hintDao = new HintDao();
+    @Override
+    public HintDao getDao(){
+        if (instance == null) {
+            instance = new HintDao();
         }
-        return hintDao;
+        return instance;
     }
 
     public void createHint(String game_code, int game_round, String hint, int associated_cards) throws SQLException {

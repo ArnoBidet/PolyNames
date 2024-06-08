@@ -6,9 +6,17 @@ import java.sql.SQLException;
 
 import model.Player;
 
-public class PlayerDao extends GenericDao {
-    public PlayerDao() {
+public class PlayerDao extends GenericDao<PlayerDao> {
+    private PlayerDao() {
         super();
+    }
+
+    @Override
+    public PlayerDao getDao(){
+        if (instance == null) {
+            instance = new PlayerDao();
+        }
+        return instance;
     }
 
     public Player getPlayer(String cookie) throws SQLException {
