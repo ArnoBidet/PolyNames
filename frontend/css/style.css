@@ -58,7 +58,13 @@ body {
     max-width: 9rem;
 }
 
-#landing-page button:hover{
+#landing-page button:disabled{
+    background: linear-gradient(90deg, #f12711 0%,#f5af19 100%);
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+#landing-page button:hover:not(:disabled){
     scale: 1.02;
     transition: scale 0.2s ease-out; 
 }
