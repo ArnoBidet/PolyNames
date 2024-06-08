@@ -8,13 +8,13 @@ import java.util.List;
 
 import model.Hint;
 
-public class HintDao extends GenericDao<HintDao>{
+public class HintDao extends GenericDao{
+    protected static HintDao instance;
 
     private HintDao() {
         super();
     }
 
-    @Override
     public HintDao getDao(){
         if (instance == null) {
             instance = new HintDao();

@@ -9,12 +9,12 @@ import java.util.List;
 import database.PolyNameDatabase;
 import model.Word;
 
-public class WordDao extends GenericDao<WordDao> {
+public class WordDao extends GenericDao {
+    protected static WordDao instance;
     private WordDao() {
         super();
     }
 
-    @Override
     public WordDao getDao(){
         if (instance == null) {
             instance = new WordDao();

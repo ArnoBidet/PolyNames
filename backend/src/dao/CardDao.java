@@ -9,7 +9,8 @@ import java.util.List;
 import model.Card;
 import model.Word;
 
-public class CardDao extends GenericDao<CardDao> {
+public class CardDao extends GenericDao {
+    protected static CardDao instance;
     final int GRID_ROW = 5;
     final int GRID_COL = 5;
     protected database.MySQLDatabase database;
@@ -18,8 +19,7 @@ public class CardDao extends GenericDao<CardDao> {
         super();
     }
 
-    @Override
-    public CardDao getDao(){
+    public static CardDao getDao(){
         if (instance == null) {
             instance = new CardDao();
         }

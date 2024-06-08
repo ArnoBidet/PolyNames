@@ -4,9 +4,8 @@ import java.sql.SQLException;
 
 import database.PolyNameDatabase;
 
-public abstract class GenericDao <T> {
+public abstract class GenericDao {
 	protected database.MySQLDatabase database;
-	protected T instance;
 
 	GenericDao() {
 		try {
@@ -15,6 +14,4 @@ public abstract class GenericDao <T> {
 			e.printStackTrace();
 		}
 	}
-
-	public abstract T getDao();
 }

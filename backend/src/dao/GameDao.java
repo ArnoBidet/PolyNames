@@ -6,13 +6,12 @@ import java.sql.SQLException;
 
 import model.Game;
 
-public class GameDao extends GenericDao<GameDao> {
+public class GameDao extends GenericDao {
 	protected static GameDao instance;
 	private GameDao() {
 		super();
 	}
 
-	@Override
     public GameDao getDao(){
         if (instance == null) {
             instance = new GameDao();
