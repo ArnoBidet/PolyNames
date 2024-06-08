@@ -17,9 +17,6 @@ import webserver.WebServerRequest;
 import webserver.WebServerResponse;
 
 public class HintController {
-    private static PlayerDao playerDao;
-    private static CardDao cardDao;
-
     public static void createHint(WebServerContext context) {
 
         WebServerRequest request = context.getRequest();
@@ -88,7 +85,7 @@ public class HintController {
                 return;
             }
 
-            Card card = cardDao.getCard(game_id, guess.row(), guess.column());
+            Card card = CardDao.getDao().getCard(game_id, guess.row(), guess.column());
             if (card.is_discovered()) {
                 response.badRequest("Vous avez déjà proposé cette carte !");
                 return;
