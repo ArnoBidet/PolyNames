@@ -4,7 +4,7 @@ export default class LandingView {
     }
 
     renderLanding() {
-        fetch("/frontend/pages/landing.html").then(response => response.text()).then(text => {
+        fetch("/frontend/templates/landing.html").then(response => response.text()).then(text => {
             this._root.innerHTML = text;
         });
     }

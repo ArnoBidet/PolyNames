@@ -7,7 +7,7 @@ export default class FormatErrorView {
             return;
         }
         this.#isDisplayed = true;
-        fetch("/frontend/pages/format-error.html").then(response => response.text()).then(text => {
+        fetch("/frontend/templates/format-error.html").then(response => response.text()).then(text => {
             document.body.innerHTML += text;
         });
     }
