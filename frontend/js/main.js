@@ -1,20 +1,16 @@
-import { SSEClient } from "../libs/sse-client.js";
 import FormatErrorView from "./view/format-error-view.js";
 import LandingView from "./view/landing-view.js";
 
-let formatErrorView = new FormatErrorView();
-
 function run() {
-  let landingView = new LandingView();
-  landingView.renderLanding();
+  new LandingView().render();
   resize();
 }
 
 function resize() {
-  if (window.innerWidth < 1080 || window.innerHeight < 800)
-    formatErrorView.renderFormatError();
+  if (window.innerWidth < 1000 || window.innerHeight < 700)
+    new FormatErrorView().render();
   else
-    formatErrorView.removeError();
+    new FormatErrorView().remove();
 
 }
 

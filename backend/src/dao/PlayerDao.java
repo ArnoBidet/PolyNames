@@ -27,9 +27,11 @@ public class PlayerDao extends GenericDao {
         return this.generatePlayerFromResultSet(rs);
     }
 
-    public void createPlayer(String cookie) throws SQLException{
-        PreparedStatement statement = this.database.prepareStatement("INSERT INTO Player (cookie) VALUES (?)");
+    public void createPlayer(String cookie, String game_code, boolean host) throws SQLException{
+        PreparedStatement statement = this.database.prepareStatement("INSERT INTO Player (cookie, game_code, host) VALUES (?, ?, ?)");
         statement.setString(1, cookie);
+        statement.setString(2, game_code);
+        statement.setBoolean(3, host);
     }
 
     public void deletePlayerFromGame(String game_code) throws SQLException {

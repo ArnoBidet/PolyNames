@@ -8,15 +8,16 @@ public class App {
         WebServer webserver = new WebServer();
         final int port_number = 8081;
         webserver.getRouter().post(
-                "/api/new-game",
+                "/api/create-game",
                 (WebServerContext context) -> {
                     GameController.createGame(context);
                 });
-
         webserver.getRouter().post(
-                "/api/:game_code/hint", (WebServerContext context) -> {
-                    HintController.createHint(context);
+                "/api/join-game/:game_code",
+                (WebServerContext context) -> {
+                    GameController.joinGame(context);
                 });
+
 
         webserver.getRouter().post(
                 "/api/:game_code/guess", (WebServerContext context) -> {
