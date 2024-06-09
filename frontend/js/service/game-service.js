@@ -4,7 +4,8 @@ import { BASE_URL, SSE_URL } from "../constants.js";
 export default class GameService {
     static async createGame() {
         const response = await fetch(`${BASE_URL}api/create-game`, {
-            method: 'POST'
+            method: 'POST',
+            credentials: 'include'
         });
         const newGame = JSON.parse(await response.json());
         return newGame;
@@ -18,7 +19,8 @@ export default class GameService {
 
     static async joinGame(game_code) {
         const response = await fetch(`${BASE_URL}api/join-game/${game_code}`, {
-            method: 'POST'
+            method: 'POST',
+            credentials: 'include'
         });
         const newGame = JSON.parse(await response.json());
         return newGame;
