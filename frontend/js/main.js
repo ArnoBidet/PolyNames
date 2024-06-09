@@ -1,3 +1,4 @@
+import { MIN_HEIGHT, MIN_WIDTH } from "./constants.js";
 import FormatErrorView from "./view/format-error-view.js";
 import LandingView from "./view/landing-view.js";
 
@@ -7,7 +8,7 @@ function run() {
 }
 
 function resize() {
-  if (window.innerWidth < 1000 || window.innerHeight < 700)
+  if (window.innerWidth < MIN_WIDTH || window.innerHeight < MIN_HEIGHT)
     FormatErrorView.render();
   else
     FormatErrorView.remove();
