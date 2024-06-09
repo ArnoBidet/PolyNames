@@ -13,7 +13,6 @@ export default class JoinCodeView extends View {
     render(joinCode) {
         clearView();
         fetch("/frontend/templates/join-code.html").then(response => response.text()).then(text => {
-            console.log(root);
             this.root.innerHTML += text;
             this.s_join_code.innerText = joinCode;
             this.b_copy_code.addEventListener("click", () => {
