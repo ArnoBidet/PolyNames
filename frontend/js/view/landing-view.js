@@ -12,14 +12,12 @@ export default class LandingView extends View {
         super();
     }
 
-    onJoinGame(game_code) {
-        console.log('join game');
+    onJoinGame() {
         GameService.joinGame(this.i_join_game.value).then(game => {
             new WaitForRoleView().render(game.game_code);
         });
     }
     onCreateGame() {
-        console.log('create game');
         GameService.createGame().then(game => {
             new JoinCodeView().render(game.game_code);
         });
