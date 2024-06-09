@@ -1,3 +1,7 @@
+CREATE DATABASE IF NOT EXISTS polyname;
+
+USE polyname;
+
 CREATE TABLE IF NOT EXISTS Game (
     game_code CHAR(8) PRIMARY KEY
 );
