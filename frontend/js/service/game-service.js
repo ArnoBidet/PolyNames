@@ -12,8 +12,8 @@ export default class GameService {
 
     static async waitForPlayer(game_code, callback) {
         let sseClient = new SSEClient(SSE_URL);
-        sseClient.connect()
-        sseClient.subscribe("player_waiting_" + game_code, callback);
+        await sseClient.connect()
+        await sseClient.subscribe("player_waiting_" + game_code, callback);
         console.log("player_waiting_" + game_code);
     }
 
