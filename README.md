@@ -33,21 +33,21 @@ Voici le diagramme de entités-associations auquel nous avons abouti :
 Et son modèle relationnel résultant :
 
 
-Game (<u>game_code</u>)
+Game (<u>game_id</u>)
 
-Player (<u>cookie</u>, host, player_role, <i>game_code</i>)
+Player (<u>id</u>, host, player_role, <i>game_id</i>)
 
-Card (<u><i>game_code</i></u>, <u>grid_row</u>, <u>grid_col</u>, <i>word_id</i>, card_type, is_discovered)
+Card (<u><i>game_id</i></u>, <u>grid_row</u>, <u>grid_col</u>, <i>word_id</i>, card_type, is_discovered)
 
 Word (<u>id</u>,word)
 
-Hint(<u><i>game_code</i></u>, <u>game_round</u>, hint, associated_cards, found_cards, is_done)
+Hint(<u><i>game_id</i></u>, <u>game_round</u>, hint, associated_cards, found_cards, is_done)
 
 ## Considérations de fonctionnalitées pour l'API
 
 ### Identification des clients
 
-Les clients sont identifiés par un cookie qui leur est assigné lors de la création de la partie ou lors du moment où ils la rejoignent.
+Les clients sont identifiés par un id qui leur est assigné lors de la création de la partie ou lors du moment où ils la rejoignent.
 
 ### La websocket
 
@@ -79,18 +79,18 @@ Réponse :
 `Body`
 ```json
 {
-    "game_code": "12b7cb83" // alphanum random sur 8 characters
+    "user_id" : "244frfez",
+    "game_id": "12b7cb83" // alphanum random sur 8 characters
 }
 ```
-Aussi, un cookie : `user-id`
 
 #### Rejoindre une partie
 
-`POST /api/join-game/:game_code` 
+`POST /api/join-game/:game_id` 
 
 #### Proposition d'indice
 
-`POST /api/:game_code/hint` 
+`POST /api/:game_id/hint` 
 
 Requête :
 `Body`
@@ -105,7 +105,7 @@ Réponse par websocket
 
 #### Tentative de guess
 
-`POST /api/:game_code/guess` 
+`POST /api/:game_id/guess` 
 
 Requête :
 `Body`
