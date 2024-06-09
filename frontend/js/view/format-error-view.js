@@ -1,23 +1,23 @@
 export default class FormatErrorView {
-    isDisplayed = false;
+    static isDisplayed = false;
     constructor() {
     }
-    render() {
-        if (this.isDisplayed) {
+    static render() {
+        if (FormatErrorView.isDisplayed) {
             return;
         }
-        this.isDisplayed = true;
+        FormatErrorView.isDisplayed = true;
         fetch("/frontend/templates/format-error.html").then(response => response.text()).then(text => {
             document.body.innerHTML += text;
         });
     }
 
 
-    remove() {
-        if (!this.isDisplayed) {
+    static remove() {
+        if (!FormatErrorView.isDisplayed) {
             return;
         }
-        this.isDisplayed = false;
+        FormatErrorView.isDisplayed = false;
         document.querySelector('.dialog-overlay').remove();
     }
 }

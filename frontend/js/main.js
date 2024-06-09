@@ -8,10 +8,9 @@ function run() {
 
 function resize() {
   if (window.innerWidth < 1000 || window.innerHeight < 700)
-    new FormatErrorView().render();
+    FormatErrorView.render();
   else
-    new FormatErrorView().remove();
-
+    FormatErrorView.remove();
 }
 
 document.addEventListener("DOMContentLoaded", run);
