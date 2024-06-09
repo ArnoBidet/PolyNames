@@ -39,7 +39,7 @@ public class CardDao extends GenericDao {
     }
 
     public List<Card> getCards(String game_id) throws SQLException {
-        PreparedStatement statement = this.database.prepareStatement("SELECT game_code, grid_row, grid_col, word_id, card_type, is_discovered FROM Card WHERE game_code = ?");
+        PreparedStatement statement = this.database.prepareStatement("SELECT game_code, grid_row, grid_col, word_id, card_type, is_discovered FROM card WHERE game_code = ?");
         statement.setString(1, game_id);
         ResultSet results = statement.executeQuery();
         List<Card> result = new ArrayList<Card>();
@@ -51,7 +51,7 @@ public class CardDao extends GenericDao {
 
     public void createCard(String game_code, List<Word> words) throws SQLException {
         PreparedStatement statement = this.database
-                .prepareStatement("INSERT INTO Card (game_code, grid_row, grid_col, word_id) VALUES (?, ?, ?, ?)");
+                .prepareStatement("INSERT INTO card (game_code, grid_row, grid_col, word_id) VALUES (?, ?, ?, ?)");
 
         for (int row = 0; row < GRID_ROW; row++) {
             for (int col = 0; col < GRID_COL; col++) {
@@ -67,7 +67,7 @@ public class CardDao extends GenericDao {
     }
 
     public void deleteCard(String game_code) throws SQLException {
-        PreparedStatement statement = this.database.prepareStatement("DELETE FROM Card WHERE game_code = ?");
+        PreparedStatement statement = this.database.prepareStatement("DELETE FROM card WHERE game_code = ?");
         statement.setString(1, game_code);
         statement.executeUpdate();
     }

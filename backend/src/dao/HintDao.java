@@ -23,7 +23,7 @@ public class HintDao extends GenericDao{
     }
 
     public void createHint(String game_code, int game_round, String hint, int associated_cards) throws SQLException {
-        PreparedStatement statement = this.database.prepareStatement("INSERT INTO Hint (game_code, game_round, hint, associated_cards) VALUES (?, ?, ?, ?)");
+        PreparedStatement statement = this.database.prepareStatement("INSERT INTO hint (game_code, game_round, hint, associated_cards) VALUES (?, ?, ?, ?)");
         statement.setString(1, game_code);
         statement.setInt(2, game_round);
         statement.setString(3, hint);
@@ -32,7 +32,7 @@ public class HintDao extends GenericDao{
     }
 
     public void updateHint(String game_code, int game_round, int found_cards, boolean is_done) throws SQLException {
-        PreparedStatement statement = this.database.prepareStatement("UPDATE Hint SET found_cards = ?, is_done = ? WHERE game_code = ? AND game_round = ?");
+        PreparedStatement statement = this.database.prepareStatement("UPDATE hint SET found_cards = ?, is_done = ? WHERE game_code = ? AND game_round = ?");
         statement.setInt(1, found_cards);
         statement.setBoolean(2, is_done);
         statement.setString(3, game_code);
@@ -41,7 +41,7 @@ public class HintDao extends GenericDao{
     }
 
     public List<Hint> getHintes(String game_code) throws SQLException {
-        PreparedStatement statement = this.database.prepareStatement("SELECT * FROM Hint WHERE game_code = ?");
+        PreparedStatement statement = this.database.prepareStatement("SELECT * FROM hint WHERE game_code = ?");
         statement.setString(1, game_code);
         ResultSet results = statement.executeQuery();
         List<Hint> result = new ArrayList<Hint>();

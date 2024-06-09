@@ -2,25 +2,25 @@ CREATE DATABASE IF NOT EXISTS polyname;
 
 USE polyname;
 
-CREATE TABLE IF NOT EXISTS Game (
+CREATE TABLE IF NOT EXISTS game (
     game_code CHAR(8) PRIMARY KEY
 );
 
-CREATE TABLE IF NOT EXISTS Word (
+CREATE TABLE IF NOT EXISTS word (
     id INTEGER PRIMARY KEY AUTO_INCREMENT ,
     word VARCHAR(11),
     CONSTRAINT uq_word UNIQUE (word)
 );
 
-CREATE TABLE IF NOT EXISTS Player (
-    cookie VARCHAR(8) PRIMARY KEY,
+CREATE TABLE IF NOT EXISTS player (
+    user_id VARCHAR(8) PRIMARY KEY,
     host BOOLEAN DEFAULT FALSE,
     player_role VARCHAR(20) DEFAULT 'UNDEFINED' CHECK (player_role IN ('WORD_MASTER', 'GUESS_MASTER', 'UNDEFINED')),
     game_code CHAR(8),
-    CONSTRAINT fk_player_game_code FOREIGN KEY (game_code) REFERENCES Game(game_code)
+    CONSTRAINT fk_player_game_code FOREIGN KEY (game_code) REFERENCES game(game_code)
 );
 
-CREATE TABLE IF NOT EXISTS Card (
+CREATE TABLE IF NOT EXISTS card (
     game_code CHAR(8),
     grid_row INTEGER CHECK (grid_row >= 0 AND grid_row < 5),
     grid_col INTEGER CHECK (grid_col >= 0 AND grid_col < 5),
@@ -29,12 +29,12 @@ CREATE TABLE IF NOT EXISTS Card (
     is_discovered BOOLEAN DEFAULT FALSE,
     CONSTRAINT pk_game_cards PRIMARY KEY (game_code, grid_row, grid_col),
     CONSTRAINT uq_game_grid UNIQUE (game_code, grid_row, grid_col),
-    CONSTRAINT fk_game_grid_word_id FOREIGN KEY (word_id) REFERENCES Word(id),
-    CONSTRAINT fk_game_grid_game_code FOREIGN KEY (game_code) REFERENCES Game(game_code)
+    CONSTRAINT fk_game_grid_word_id FOREIGN KEY (word_id) REFERENCES word(id),
+    CONSTRAINT fk_game_grid_game_code FOREIGN KEY (game_code) REFERENCES game(game_code)
 );
 
 
-CREATE TABLE IF NOT EXISTS Hint (
+CREATE TABLE IF NOT EXISTS hint (
     game_code CHAR(8),
     game_round INTEGER,
     hint VARCHAR(27),
@@ -42,5 +42,5 @@ CREATE TABLE IF NOT EXISTS Hint (
     found_cards INTEGER DEFAULT 0 CHECK (found_cards >= 0 AND found_cards <= (associated_cards + 1)),
     is_done BOOLEAN DEFAULT FALSE,
     CONSTRAINT pk_hint PRIMARY KEY (game_code, game_round),
-    CONSTRAINT fk_hint_game_code FOREIGN KEY (game_code) REFERENCES Game(game_code)
+    CONSTRAINT fk_hint_game_code FOREIGN KEY (game_code) REFERENCES game(game_code)
 );

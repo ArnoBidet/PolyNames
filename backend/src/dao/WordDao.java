@@ -25,7 +25,7 @@ public class WordDao extends GenericDao {
     public List<Word> getRandomList() throws SQLException {
         this.database = new PolyNameDatabase();
 
-        PreparedStatement statement = this.database.prepareStatement("SELECT * FROM Word ORDER BY RAND() LIMIT 25;");
+        PreparedStatement statement = this.database.prepareStatement("SELECT * FROM word ORDER BY RAND() LIMIT 25;");
         ResultSet rs = statement.executeQuery();
         List<Word> results = new ArrayList<Word>();
         

@@ -59,25 +59,18 @@ public class WebServerResponse {
         }
     }
 
-    public void addCookie(String key, String value) {
-        Headers headers = this.exchange.getResponseHeaders();
-        headers.add("Access-Control-Expose-Headers", "*");
-        headers.add("Set-Cookie", key + "=" + value);
-    }
-
     private void initCors() {
         Headers headers = this.exchange.getResponseHeaders();
         headers.add("Access-Control-Allow-Origin", Constants.FRONTEND_URL);
         headers.add("Access-Control-Allow-Headers", "*");
         headers.add("Access-Control-Allow-Methods", "*");
-        headers.add("Access-Control-Allow-Credentials", "true");
     }
 
     public OutputStream openSSEStream() {
 
         try {
             this.initCors();
-            
+
             Headers responseHeaders = this.exchange.getResponseHeaders();
             responseHeaders.add("Content-Type", "text/event-stream");
             responseHeaders.add("Connection", "keep-alive");
