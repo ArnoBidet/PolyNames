@@ -103,7 +103,7 @@ public class HintController {
                 is_done = last_hint.associated_cards()+1 == found_cards;
             }
 
-            HintDao.getDao().updateHint(last_hint.game_code(), last_hint.game_round(), found_cards, is_done);
+            HintDao.getDao().updateHint(last_hint.game_id(), last_hint.game_round(), found_cards, is_done);
 
             // @TODO finir la réponse avec le sse
 

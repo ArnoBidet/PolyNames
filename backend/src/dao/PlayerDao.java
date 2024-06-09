@@ -25,7 +25,7 @@ public class PlayerDao extends GenericDao {
     public Player getPlayer(String user_id) throws SQLException {
         System.out.println("getPlayer" + user_id);
         PreparedStatement statement = this.database
-                .prepareStatement("SELECT user_id, host, player_role, game_code FROM player WHERE id = ?");
+                .prepareStatement("SELECT user_id, host, player_role, game_id FROM player WHERE id = ?");
         statement.setString(1, user_id);
         ResultSet rs = statement.executeQuery();
         while (rs.next())
@@ -33,10 +33,10 @@ public class PlayerDao extends GenericDao {
         return null;
     }
 
-    public List<Player> getPlayerByGameCode(String game_code) throws SQLException {
+    public List<Player> getPlayerByGameCode(String game_id) throws SQLException {
         PreparedStatement statement = this.database
-                .prepareStatement("SELECT user_id, host, player_role, game_code FROM player WHERE game_code = ?");
-        statement.setString(1, game_code);
+                .prepareStatement("SELECT user_id, host, player_role, game_id FROM player WHERE game_id = ?");
+        statement.setString(1, game_id);
         ResultSet rs = statement.executeQuery();
         List<Player> result = new ArrayList<Player>();
         while (rs.next()) {
@@ -45,11 +45,11 @@ public class PlayerDao extends GenericDao {
         return result;
     }
 
-    public void createPlayer(String user_id, String game_code, boolean host) throws SQLException {
+    public void createPlayer(String user_id, String game_id, boolean host) throws SQLException {
         PreparedStatement statement = this.database
-                .prepareStatement("INSERT INTO player (user_id, game_code, host) VALUES (?, ?, ?)");
+                .prepareStatement("INSERT INTO player (user_id, game_id, host) VALUES (?, ?, ?)");
         statement.setString(1, user_id);
-        statement.setString(2, game_code);
+        statement.setString(2, game_id);
         statement.setBoolean(3, host);
         statement.executeUpdate();
     }
@@ -62,9 +62,9 @@ public class PlayerDao extends GenericDao {
         statement.executeUpdate();
     }
 
-    public void deletePlayersFromGame(String game_code) throws SQLException {
-        PreparedStatement statement = this.database.prepareStatement("DELETE FROM player WHERE game_code = ?");
-        statement.setString(1, game_code);
+    public void deletePlayersFromGame(String game_id) throws SQLException {
+        PreparedStatement statement = this.database.prepareStatement("DELETE FROM player WHERE game_id = ?");
+        statement.setString(1, game_id);
         statement.executeUpdate();
     }
 
@@ -72,7 +72,7 @@ public class PlayerDao extends GenericDao {
         final String id = results.getString("user_id");
         final boolean host = results.getBoolean("host");
         final String player_role = results.getString("player_role");
-        final String game_code = results.getString("game_code");
-        return new Player(id, host, player_role, game_code);
+        final String game_id = results.getString("game_id");
+        return new Player(id, host, player_role, game_id);
     }
 }

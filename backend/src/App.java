@@ -13,15 +13,16 @@ public class App {
                     GameController.createGame(context);
                 });
         webserver.getRouter().post(
-                "/api/join-game/:game_code",
+                "/api/join-game/:game_id",
                 (WebServerContext context) -> {
                     GameController.joinGame(context);
                 });
 
         webserver.getRouter().post(
-                "/api/chose-role/:game_code",
+                "/api/chose-role/:game_id",
                 (WebServerContext context) -> {
-                    GameController.joinGame(context);
+                    GameController.choseRole(context);
+                });
                 });
 
         webserver.listen(port_number);

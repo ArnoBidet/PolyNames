@@ -20,13 +20,13 @@ public class GameDao extends GenericDao {
     }
 
 	public void createGame(String id) throws SQLException {
-		PreparedStatement statement = this.database.prepareStatement("INSERT INTO game (game_code) VALUES (?)");
+		PreparedStatement statement = this.database.prepareStatement("INSERT INTO game (game_id) VALUES (?)");
 		statement.setString(1, id);
 		statement.executeUpdate();
 	}
 
 	public Game getGame(String id) throws SQLException {
-		PreparedStatement statement = this.database.prepareStatement("SELECT game_code FROM game WHERE game_code = ?");
+		PreparedStatement statement = this.database.prepareStatement("SELECT game_id FROM game WHERE game_id = ?");
 		statement.setString(1, id);
 		ResultSet results = statement.executeQuery();
 		if (results.next()) {
@@ -36,13 +36,13 @@ public class GameDao extends GenericDao {
 	}
 
 	public void deleteGame(String id) throws SQLException {
-		PreparedStatement statement = this.database.prepareStatement("DELETE FROM game WHERE game_code = ?");
+		PreparedStatement statement = this.database.prepareStatement("DELETE FROM game WHERE game_id = ?");
 		statement.setString(1, id);
 		statement.executeUpdate();
 	}
 
 	private Game generateGameDaoFromResultSet(ResultSet results) throws SQLException {
-		final String game_code = results.getString("game_code");
-		return new Game(game_code);
+		final String game_id = results.getString("game_id");
+		return new Game(game_id);
 	}
 }
