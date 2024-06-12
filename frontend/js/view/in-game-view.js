@@ -8,23 +8,24 @@ export default class InGameView extends View {
 
     render() {
         clearView();
-        fetch("/frontend/templates/in-game-view.html").then(response => response.text()).then(text => {
+        fetch("/frontend/templates/in-game-view.html").then(response => response.text()).then(async text => {
             this.root.innerHTML += text;
-            let cardGrid = document.createElement("div");
-            cardGrid.classList.add("card-grid");
+          
+            let card_template = await fetch("/frontend/templates/card.html").then(response => response.text())
+            console.log();
+            let cardGrid = document.querySelector(".card-grid");
 
             list_cards.forEach((card, index) => {
-                const cardElement = document.createElement("div");
-                cardElement.classList.add("card");
-                cardElement.style.gridRow = card.grid_row + 1;
-                cardElement.style.gridColumn = card.grid_col + 1;
-                cardElement.innerHTML = `
-                <p>${card.word}</p>
-                <h3>${card.word}</h3>
-            `;
-                cardGrid.appendChild(cardElement);
+                let current_card = card_template;
+                current_card = current_card.replace("data-row", `data-row="${card.grid_row}"`);
+                current_card = current_card.replace("data-column", `data-column="${card.grid_col}"`);
+                current_card = current_card.replaceAll("{word}", card.word);
+                cardGrid.innerHTML += current_card;
+                current_card = cardGrid.querySelector(".card[data-row='" + card.grid_row + "'][data-column='" + card.grid_col + "'");
+                current_card.style.gridRow = card.grid_row + 1;
+                current_card.style.gridColumn = card.grid_col + 1;
                 setTimeout(() => {
-                    cardElement.classList.add("animated");
+                  current_card.classList.add("animated");
                 }, 50 * index);
             });
             const cards = document.querySelectorAll(".card");
