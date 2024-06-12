@@ -25,8 +25,8 @@ export default class JoinCodeView extends View {
     }
     render() {
         clearView();
-        fetch("/frontend/templates/join-code.html").then(response => response.text()).then(text => {
-            this.root.innerHTML += text;
+        fetch("/frontend/templates/join-code.html").then(async response => {
+            this.root.innerHTML += await response.text();
             this.s_join_code.innerText = game_id();
             this.b_copy_code.addEventListener("click", () => {
                 navigator.clipboard.writeText(this.s_join_code.innerText);

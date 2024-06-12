@@ -11,8 +11,8 @@ export class WaitForRoleView extends View {
     }
     render() {
         clearView();
-        fetch("/frontend/templates/wait-for-role.html").then(response => response.text()).then(text => {
-            this.root.innerHTML = text;
+        fetch("/frontend/templates/wait-for-role.html").then(async response => {
+            this.root.innerHTML = await response.text();
             GameService.waitForRole((data) => {
                 data = JSON.parse(data);
                 if (data.role) {

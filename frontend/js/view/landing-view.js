@@ -25,8 +25,8 @@ export default class LandingView extends View {
 
     render() {
         clearView();
-        fetch("/frontend/templates/landing.html").then(response => response.text()).then(text => {
-            root.innerHTML = text;
+        fetch("/frontend/templates/landing.html").then(async response => {
+            this.root.innerHTML = await response.text();
             this.i_join_game.addEventListener('input', () => {
                 this.b_join_game.disabled = this.i_join_game.value.length === 0;
                 if (this.i_join_game.value.length < 8) {

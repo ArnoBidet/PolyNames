@@ -9,8 +9,8 @@ export default class FormatErrorView {
             return;
         }
         FormatErrorView.isDisplayed = true;
-        fetch("/frontend/templates/format-error.html").then(response => response.text()).then(text => {
-            document.body.innerHTML += text;
+        fetch("/frontend/templates/format-error.html").then(async response => {
+            document.body.innerHTML += await response.text();
             document.querySelector('#min-width').innerHTML = MIN_WIDTH;
             document.querySelector('#min-height').innerHTML = MIN_HEIGHT;
         });

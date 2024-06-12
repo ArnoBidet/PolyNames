@@ -12,8 +12,8 @@ export class ChoseRoleView extends View{
     }
     render() {
         clearView();
-        fetch("/frontend/templates/chose-role.html").then(response => response.text()).then(text => {
-            this.root.innerHTML += text;
+        fetch("/frontend/templates/chose-role.html").then(async response => {
+            this.root.innerHTML += await response.text();
             this.b_word_master.addEventListener('click', () => {
                 GameService.choseRole(PlayerRole.GUESS_MASTER).then((data) => {
                     if (data.role) {
