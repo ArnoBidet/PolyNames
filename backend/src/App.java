@@ -1,5 +1,5 @@
 import controller.GameController;
-import controller.HintController;
+// import controller.HintController;
 import webserver.WebServer;
 import webserver.WebServerContext;
 
@@ -8,19 +8,26 @@ public class App {
         WebServer webserver = new WebServer();
         final int port_number = 8081;
         webserver.getRouter().post(
-                "/api/new-game",
+                "/api/create-game",
                 (WebServerContext context) -> {
                     GameController.createGame(context);
                 });
-
         webserver.getRouter().post(
-                "/api/:game_code/hint", (WebServerContext context) -> {
-                    HintController.createHint(context);
+                "/api/join-game/:game_id",
+                (WebServerContext context) -> {
+                    GameController.joinGame(context);
                 });
 
         webserver.getRouter().post(
-                "/api/:game_code/guess", (WebServerContext context) -> {
-                    HintController.makeGuess(context);
+                "/api/chose-role/:game_id",
+                (WebServerContext context) -> {
+                    GameController.choseRole(context);
+                });
+
+        webserver.getRouter().get(
+                "/api/:game_id/get-cards",
+                (WebServerContext context) -> {
+                    GameController.getCards(context);
                 });
 
         webserver.listen(port_number);

@@ -1,6 +1,6 @@
 <mxfile host="65bd71144e" pages="2">
     <diagram id="h4qy9qMXhf4A3E8qXzfu" name="entité-relations">
-        <mxGraphModel dx="896" dy="392" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+        <mxGraphModel dx="1357" dy="509" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
             <root>
                 <mxCell id="0"/>
                 <mxCell id="1" parent="0"/>
@@ -28,7 +28,7 @@
                 <mxCell id="12" value="Player" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=26;fillColor=none;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;" parent="1" vertex="1">
                     <mxGeometry x="180" y="123" width="140" height="104" as="geometry"/>
                 </mxCell>
-                <mxCell id="48" value="cookie: text" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="12" vertex="1">
+                <mxCell id="48" value="id: text" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="12" vertex="1">
                     <mxGeometry y="26" width="140" height="26" as="geometry"/>
                 </mxCell>
                 <mxCell id="21" value="hote: boolean" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="12" vertex="1">
@@ -40,7 +40,7 @@
                 <mxCell id="13" value="Game" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=26;fillColor=none;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;" parent="1" vertex="1">
                     <mxGeometry x="180" y="366" width="140" height="52" as="geometry"/>
                 </mxCell>
-                <mxCell id="18" value="game_code: text" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="13" vertex="1">
+                <mxCell id="18" value="game_id: text" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="13" vertex="1">
                     <mxGeometry y="26" width="140" height="26" as="geometry"/>
                 </mxCell>
                 <mxCell id="27" value="PlayerRole&#10;&lt;&lt;ENUM&gt;&gt;" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=26;fillColor=none;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;" parent="1" vertex="1">
@@ -186,7 +186,7 @@
                 <mxCell id="mXp4aYVHo92_j6GYXBpD-84" value="Le score est calculé à&lt;br&gt;partir de la table guess" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" parent="1" vertex="1">
                     <mxGeometry x="20" y="366" width="140" height="40" as="geometry"/>
                 </mxCell>
-                <mxCell id="mXp4aYVHo92_j6GYXBpD-89" value="Clé primaire composée&lt;br&gt;de game_code et round" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" parent="1" vertex="1">
+                <mxCell id="mXp4aYVHo92_j6GYXBpD-89" value="Clé primaire composée&lt;br&gt;de game_id et round" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" parent="1" vertex="1">
                     <mxGeometry x="20" y="570" width="150" height="40" as="geometry"/>
                 </mxCell>
                 <mxCell id="49" value="&lt;div style=&quot;color: rgb(204, 204, 204); background-color: rgb(31, 31, 31); font-family: Consolas, &amp;quot;Courier New&amp;quot;, monospace; font-weight: normal; font-size: 14px; line-height: 19px;&quot;&gt;&lt;br&gt;&lt;/div&gt;" style="text;whiteSpace=wrap;html=1;" parent="1" vertex="1">
@@ -221,7 +221,7 @@
                         <mxPoint x="489.5" y="210" as="targetPoint"/>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="gBbnrylQiP7jOOHIfmIO-12" value="POST /api/ws-connect/:game_code" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="gBbnrylQiP7jOOHIfmIO-11">
+                <mxCell id="gBbnrylQiP7jOOHIfmIO-12" value="POST /api/ws-connect/:game_id" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="gBbnrylQiP7jOOHIfmIO-11">
                     <mxGeometry x="-0.4448" y="3" relative="1" as="geometry">
                         <mxPoint x="-22" y="-7" as="offset"/>
                     </mxGeometry>
@@ -238,7 +238,7 @@
                         <mxPoint x="49.5" y="270" as="targetPoint"/>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="gBbnrylQiP7jOOHIfmIO-10" value="POST /api/join-game/:game_code" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="gBbnrylQiP7jOOHIfmIO-9">
+                <mxCell id="gBbnrylQiP7jOOHIfmIO-10" value="POST /api/join-game/:game_id" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="gBbnrylQiP7jOOHIfmIO-9">
                     <mxGeometry x="-0.4448" y="3" relative="1" as="geometry">
                         <mxPoint x="44" y="-7" as="offset"/>
                     </mxGeometry>

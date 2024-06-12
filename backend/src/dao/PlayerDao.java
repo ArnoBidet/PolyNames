@@ -3,38 +3,76 @@ package dao;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import model.Player;
 
 public class PlayerDao extends GenericDao {
-    public PlayerDao() {
+    protected static PlayerDao instance;
+
+    private PlayerDao() {
         super();
     }
 
-    public Player getPlayer(String cookie) throws SQLException {
-        PreparedStatement statement = this.database.prepareStatement("SELECT * FROM player WHERE cookie = ?");
+    public static PlayerDao getDao() {
+        if (instance == null) {
+            instance = new PlayerDao();
+        }
+        return instance;
+    }
+
+    public Player getPlayer(String user_id) throws SQLException {
+        System.out.println("getPlayer" + user_id);
+        PreparedStatement statement = this.database
+                .prepareStatement("SELECT user_id, host, player_role, game_id FROM player WHERE id = ?");
+        statement.setString(1, user_id);
         ResultSet rs = statement.executeQuery();
-
-        rs.next();
-        return this.generatePlayerFromResultSet(rs);
+        while (rs.next())
+            return this.generatePlayerFromResultSet(rs);
+        return null;
     }
 
-    public void createPlayer(String cookie) throws SQLException{
-        PreparedStatement statement = this.database.prepareStatement("INSERT INTO Player (cookie) VALUES (?)");
-        statement.setString(1, cookie);
+    public List<Player> getPlayerByGameCode(String game_id) throws SQLException {
+        PreparedStatement statement = this.database
+                .prepareStatement("SELECT user_id, host, player_role, game_id FROM player WHERE game_id = ?");
+        statement.setString(1, game_id);
+        ResultSet rs = statement.executeQuery();
+        List<Player> result = new ArrayList<Player>();
+        while (rs.next()) {
+            result.add(generatePlayerFromResultSet(rs));
+        }
+        return result;
     }
 
-    public void deletePlayerFromGame(String game_code) throws SQLException {
-        PreparedStatement statement = this.database.prepareStatement("DELETE FROM Player WHERE game_code = ?");
-        statement.setString(1, game_code);
+    public void createPlayer(String user_id, String game_id, boolean host) throws SQLException {
+        PreparedStatement statement = this.database
+                .prepareStatement("INSERT INTO player (user_id, game_id, host) VALUES (?, ?, ?)");
+        statement.setString(1, user_id);
+        statement.setString(2, game_id);
+        statement.setBoolean(3, host);
+        statement.executeUpdate();
+    }
+
+    public void setPlayerRole(String user_id, String role) throws SQLException {
+        PreparedStatement statement = this.database
+                .prepareStatement("UPDATE player SET player_role = ? WHERE user_id = ?");
+        statement.setString(1, role);
+        statement.setString(2, user_id);
+        statement.executeUpdate();
+    }
+
+    public void deletePlayersFromGame(String game_id) throws SQLException {
+        PreparedStatement statement = this.database.prepareStatement("DELETE FROM player WHERE game_id = ?");
+        statement.setString(1, game_id);
         statement.executeUpdate();
     }
 
     private Player generatePlayerFromResultSet(ResultSet results) throws SQLException {
-        final String cookie = results.getString("cookie");
+        final String id = results.getString("user_id");
         final boolean host = results.getBoolean("host");
         final String player_role = results.getString("player_role");
-        final String game_code = results.getString("game_code");
-        return new Player(cookie, host, player_role, game_code);
+        final String game_id = results.getString("game_id");
+        return new Player(id, host, player_role, game_id);
     }
 }

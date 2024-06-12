@@ -1,4 +1,6 @@
-INSERT INTO Word (word)
+USE polyname;
+
+INSERT INTO word (word)
 VALUES ("Bateau"),
     ("Étoile"),
     ("Reine"),

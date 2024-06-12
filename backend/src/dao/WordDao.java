@@ -10,14 +10,22 @@ import database.PolyNameDatabase;
 import model.Word;
 
 public class WordDao extends GenericDao {
-    public WordDao() {
+    protected static WordDao instance;
+    private WordDao() {
         super();
+    }
+
+    public static WordDao getDao(){
+        if (instance == null) {
+            instance = new WordDao();
+        }
+        return instance;
     }
 
     public List<Word> getRandomList() throws SQLException {
         this.database = new PolyNameDatabase();
 
-        PreparedStatement statement = this.database.prepareStatement("SELECT * FROM Word ORDER BY RAND() LIMIT 25;");
+        PreparedStatement statement = this.database.prepareStatement("SELECT * FROM word ORDER BY RAND() LIMIT 25;");
         ResultSet rs = statement.executeQuery();
         List<Word> results = new ArrayList<Word>();
         

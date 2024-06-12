@@ -1,90 +1,243 @@
+:root {
+  --card-width: 12rem;
+  --card-height: 7.6rem;
+}
+
 body {
-    background: linear-gradient(45deg, rgba(92,85,210,1) 0%, rgba(92,9,121,1) 44%, rgba(255,0,44,1) 100%);
-    background-size: cover;
-    background-position: center;
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    color: rgb(240, 151, 151);
-    font-size: 2rem;
-    font-weight: bold;
-    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
-    text-align: center;
-    margin: 0;
+  background-image: url("/frontend/public/background.svg"),
+    linear-gradient(
+      45deg,
+      rgba(92, 85, 210, 1) 0%,
+      rgba(92, 9, 121, 1) 44%,
+      rgba(255, 0, 44, 1) 100%
+    );
+  background-size: cover;
+  background-position: center;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: rgb(240, 151, 151);
+  font-size: 2rem;
+  font-weight: bold;
+  font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
+  text-align: center;
+  margin: 0;
 }
 
-#landing-page .button-container{
-    display: flex;
-    justify-content: center;
-    /* align-items: center; */
+#landing-page .button-container {
+  display: flex;
+  justify-content: center;
+  align-items: start;
+  gap: 3rem;
 }
 
-#landing-page button{
-    background: linear-gradient(90deg, #f12711 0%,#f5af19 100%);
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    color: white;
-    font-size: 1.5rem;
-    font-weight: bold;
-    cursor: pointer;
-    margin-top: 20px;
-    margin: 1rem;
+#landing-page .button-container .join-game-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: 1rem;
 }
 
-#landing-page .button-container .vertical-separator{
-    background-color: rgba(55, 55, 55, 0.5);
-    width: 3px;
-    border-radius: 9999px;
-    height: auto;
-    margin: 1rem 0;
-}
-#landing-page .button-container .join-game-container{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
+#landing-page .button-container .join-game-container input {
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  font-size: 1.5rem;
+  font-weight: bold;
+  max-width: 9rem;
 }
 
-#landing-page .button-container .join-game-container input{
-    padding: 10px;
-    border: none;
-    border-radius: 5px;
-    font-size: 1.5rem;
-    font-weight: bold;
-    margin-top: 20px;
-    margin: 1rem;
-    max-width: 9rem;
+#join-code p {
+  font-weight: bold;
+  margin: 1rem;
+  color: white;
+}
+#join-code div {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+#join-code span {
+  padding: 0.5rem;
+  border-radius: 0.25rem;
+  background-color: rgba(0, 0, 0, 0.5);
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin: 1rem;
+  color: white;
+}
+#join-code button#copy-join-code {
+  padding: 10px !important;
 }
 
-#landing-page button:hover{
-    scale: 1.02;
-    transition: scale 0.2s ease-out; 
+#join-code button#copy-join-code img {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  filter: invert(1);
 }
 
-
-.dialog-overlay{
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    width: 100vw;
-    height: 100vh;
-    background-color: rgba(0, 0, 0, 0.5);
-    color: rgb(240, 151, 151);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
+.dialog-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5);
+  color: rgb(240, 151, 151);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
 }
 
-.dialog-overlay .dialog-card{
-    background: linear-gradient(45deg,rgba(255,0,44,1) 0%, rgba(92,9,121,1) 44%,  rgba(92,85,210,1) 100%);
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-    text-align: center;
-    
+.dialog-overlay .dialog-card {
+  background: linear-gradient(
+    45deg,
+    rgba(255, 0, 44, 1) 0%,
+    rgba(92, 9, 121, 1) 44%,
+    rgba(92, 85, 210, 1) 100%
+  );
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  text-align: center;
+}
+
+/* In game */
+
+.card-grid {
+  display: grid;
+  grid-template-rows: repeat(5, var(--card-height));
+  grid-template-columns: repeat(5, var(--card-width));
+  grid-gap: 1rem;
+}
+.card {
+  background-image: url("/frontend/public/card.png");
+  background-repeat: no-repeat;
+  background-size: contain;
+  width: var(--card-width);
+  height: var(--card-height);
+  border-radius: 0.5rem;
+  display: flex;
+  transform: translateY(-2500px) translateX(-2500px);
+  transition: transform 0.5s cubic-bezier(0.17, 0.67, 0, 1.08);
+  position: relative;
+  color: black;
+  cursor: pointer;
+}
+.card img {
+  width: 100%;
+  border-radius: 5px;
+}
+.card h3 {
+  font-size: 1.1rem;
+  font-family: "Roboto", sans-serif;
+  text-transform: uppercase;
+  font-weight: 700;
+  display: flex;
+  margin-top: 4.25rem;
+  margin-left: 1rem;
+  width: 9.85rem;
+  height: 2.2rem;
+  position: absolute;
+  justify-content: center;
+  align-items: center;
+}
+.card p {
+  font-size: 0.9rem;
+  font-family: "Roboto", sans-serif;
+  text-transform: uppercase;
+  display: flex;
+  margin-top: 2.3rem;
+  margin-left: 1.2rem;
+  width: 7rem;
+  height: 1.5rem;
+  position: absolute;
+  justify-content: center;
+  align-items: center;
+  rotate: 180deg;
+}
+
+.animated.card {
+  transform: translateY(0) translateX(0);
+}
+
+.animated:hover {
+  --angle: 5deg;
+  animation: shake 0.3s;
+}
+
+@keyframes shake {
+  25% {
+    transform: rotate(calc(var(--angle) * -1));
+  }
+
+  50% {
+    transform: rotate(var(--angle));
+  }
+
+  100% {
+    transform: rotate(0deg);
+  }
+}
+
+/* Generic */
+
+button {
+  cursor: pointer;
+  transition: box-shadow 0.2s ease-in-out;
+}
+
+button:not(:disabled) {
+  -webkit-box-shadow: 0px 0px 13px 0px rgba(0, 0, 0, 0.41);
+  box-shadow: 0px 0px 13px 0px rgba(0, 0, 0, 0.41);
+}
+
+button:disabled {
+  cursor: not-allowed;
+}
+
+button.primary {
+  background: #f5af19;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  color: white;
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+button.secondary {
+  background: #f12711;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  color: white;
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+button.neutral {
+  background: #aaaaaa;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  color: white;
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+button:disabled {
+  filter: brightness(0.5);
+  cursor: not-allowed;
+}
+
+button:hover:not(:disabled) {
+  -webkit-box-shadow: 0px 0px 13px 3px rgba(0, 0, 0, 0.41);
+  box-shadow: 0px 0px 13px 3px rgba(0, 0, 0, 0.41);
 }

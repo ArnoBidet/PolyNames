@@ -1,23 +1,27 @@
+import { MIN_HEIGHT, MIN_WIDTH } from "../constants.js";
+
 export default class FormatErrorView {
-    #isDisplayed = false;
+    static isDisplayed = false;
     constructor() {
     }
-    renderFormatError() {
-        if(this.#isDisplayed) {
+    static render() {
+        if (FormatErrorView.isDisplayed) {
             return;
         }
-        this.#isDisplayed = true;
-        fetch("/frontend/pages/format-error.html").then(response => response.text()).then(text => {
+        FormatErrorView.isDisplayed = true;
+        fetch("/frontend/templates/format-error.html").then(response => response.text()).then(text => {
             document.body.innerHTML += text;
+            document.querySelector('#min-width').innerHTML = MIN_WIDTH;
+            document.querySelector('#min-height').innerHTML = MIN_HEIGHT;
         });
     }
-        
-    
-    removeError() {
-        if(!this.#isDisplayed) {
+
+
+    static remove() {
+        if (!FormatErrorView.isDisplayed) {
             return;
         }
-        this.#isDisplayed = false;
+        FormatErrorView.isDisplayed = false;
         document.querySelector('.dialog-overlay').remove();
     }
 }
