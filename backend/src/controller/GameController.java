@@ -18,7 +18,7 @@ public class GameController {
             GameDao.getDao().createGame(game_id);
             PlayerDao.getDao().createPlayer(user_id, game_id, true);
             
-            response.json("{\"game_id\":\"" + game_id + "\", user_id:\"" + user_id + "\"}");
+            response.json("{\"game_id\":\"" + game_id + "\", \"user_id\":\"" + user_id + "\"}");
         } catch (SQLException e) {
             response.serverError("Erreur lors de la création de la partie");
             System.err.println("Erreur lors de la création de la partie");
@@ -37,7 +37,7 @@ public class GameController {
                 return;
             }
             PlayerDao.getDao().createPlayer(user_id, game_id, false);
-            response.json("{\"game_id\":\"" + game_id + "\", user_id:\"" + user_id + "\"}");
+            response.json("{\"game_id\":\"" + game_id + "\", \"user_id\":\"" + user_id + "\"}");
             context.getSSE().emit("player_waiting_" + game_id, "player_joined");
         } catch (SQLException e) {
             response.serverError("Erreur lors de la connexion à la partie");
