@@ -22,12 +22,12 @@ CREATE TABLE IF NOT EXISTS player (
 
 CREATE TABLE IF NOT EXISTS card (
     game_id CHAR(8),
+    word_id INTEGER,
     grid_row INTEGER CHECK (grid_row >= 0 AND grid_row < 5),
     grid_col INTEGER CHECK (grid_col >= 0 AND grid_col < 5),
-    word_id INTEGER,
     card_type VARCHAR(10) DEFAULT 'NEUTRAL'  CHECK (card_type IN ('NEUTRAL', 'ASSASSIN', 'WORD')),
     is_discovered BOOLEAN DEFAULT FALSE,
-    CONSTRAINT pk_game_cards PRIMARY KEY (game_id, grid_row, grid_col),
+    CONSTRAINT pk_game_cards PRIMARY KEY (game_id, word_id),
     CONSTRAINT uq_game_grid UNIQUE (game_id, grid_row, grid_col),
     CONSTRAINT fk_game_grid_word_id FOREIGN KEY (word_id) REFERENCES word(id),
     CONSTRAINT fk_game_grid_game_id FOREIGN KEY (game_id) REFERENCES game(game_id)

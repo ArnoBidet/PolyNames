@@ -37,7 +37,7 @@ Game (<u>game_id</u>)
 
 Player (<u>id</u>, host, player_role, <i>game_id</i>)
 
-Card (<u><i>game_id</i></u>, <u>grid_row</u>, <u>grid_col</u>, <i>word_id</i>, card_type, is_discovered)
+Card (<u><i>game_id</i></u>, <u><i>word_id</i></u>, grid_row, grid_col, card_type, is_discovered)
 
 Word (<u>id</u>,word)
 
