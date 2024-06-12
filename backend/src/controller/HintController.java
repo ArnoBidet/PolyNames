@@ -32,7 +32,7 @@ public class HintController {
 
             String role = player.player_role();
 
-            if (!role.equals(PlayerRole.INTUITIONS)) {
+            if (!role.equals(PlayerRole.GUESS_MASTER)) {
                 response.forbidden("Mauvais rôle !");
             }
             if (hint.hint().indexOf(" ") != -1 || hint.hint().length() > 27) {
@@ -70,7 +70,7 @@ public class HintController {
 
             String role = player.player_role();
 
-            if (!role.equals(PlayerRole.INTUITIONS)) {
+            if (!role.equals(PlayerRole.GUESS_MASTER)) {
                 response.badRequest("Mauvais rôle !");
                 return;
             }
