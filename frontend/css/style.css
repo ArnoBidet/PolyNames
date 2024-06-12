@@ -5,12 +5,7 @@
 
 body {
   background-image: url("/frontend/public/background.svg"),
-    linear-gradient(
-      45deg,
-      rgba(92, 85, 210, 1) 0%,
-      rgba(92, 9, 121, 1) 44%,
-      rgba(255, 0, 44, 1) 100%
-    );
+    radial-gradient(circle at 50% 50%, rgb(231, 102, 60) 0%, rgb(72, 12, 2) 100%);
   background-size: cover;
   background-position: center;
   height: 100vh;
@@ -163,11 +158,26 @@ body {
   rotate: 180deg;
 }
 
-.animated.card {
+.card.revealed {
+  filter: brightness(0.5);
+  transform: scale(0.95);
+  cursor:not-allowed;
+}
+
+.card.guess {
+  background-image: url("/frontend/public/card-guess.png");
+}
+
+
+.card.killer {
+  background-image: url("/frontend/public/card-killer.png");
+}
+
+.card.animated {
   transform: translateY(0) translateX(0);
 }
 
-.animated:hover {
+.card:hover:not(.revealed) {
   --angle: 5deg;
   animation: shake 0.3s;
 }
