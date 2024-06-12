@@ -12,6 +12,17 @@ export default class JoinCodeView extends View {
     constructor() {
         super();
     }
+
+    #copiedMessage() {
+        if (document.getElementById("copied-message")) {
+            document.getElementById("copied-message").remove();
+        }
+        const message = document.createElement("div");
+        message.id = "copied-message";
+        message.innerText = "Copied!";
+
+        return message;
+    }
     render() {
         clearView();
         fetch("/frontend/templates/join-code.html").then(response => response.text()).then(text => {
@@ -19,6 +30,7 @@ export default class JoinCodeView extends View {
             this.s_join_code.innerText = game_id();
             this.b_copy_code.addEventListener("click", () => {
                 navigator.clipboard.writeText(this.s_join_code.innerText);
+                this.b_copy_code.parentNode.appendChild(this.#copiedMessage());
             });
             this.b_cancel.addEventListener("click", () => {
                 new LandingView().render();

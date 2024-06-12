@@ -30,8 +30,21 @@ export default class GameService {
     }
 
     static async choseRole(role) {
+        const response = await fetch(`${BASE_URL}api/chose-role/${game_id()}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ "role": role, "user_id": user_id() })
+        });
+        const result = JSON.parse(await response.json())
+        set_role(result.role);
+        return result;
     }
     static async waitForRole(callback) {
+        let sseClient = new SSEClient(SSE_URL);
+        await sseClient.connect()
+        await sseClient.subscribe("wait_for_role_" + game_id(), callback);
     }
 
 }
