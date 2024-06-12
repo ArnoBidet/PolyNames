@@ -23,6 +23,11 @@ public class App {
                 (WebServerContext context) -> {
                     GameController.choseRole(context);
                 });
+
+        webserver.getRouter().get(
+                "/api/:game_id/get-cards",
+                (WebServerContext context) -> {
+                    GameController.getCards(context);
                 });
 
         webserver.listen(port_number);

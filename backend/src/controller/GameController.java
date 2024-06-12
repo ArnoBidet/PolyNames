@@ -22,12 +22,12 @@ public class GameController {
         try {
             GameDao.getDao().createGame(game_id);
             PlayerDao.getDao().createPlayer(user_id, game_id, true);
-            
+
             response.json("{\"game_id\":\"" + game_id + "\", \"user_id\":\"" + user_id + "\"}");
         } catch (SQLException e) {
             response.serverError("Erreur lors de la création de la partie");
             System.err.println("Erreur lors de la création de la partie");
-            
+
         }
     }
 
@@ -87,11 +87,30 @@ public class GameController {
             PlayerDao.getDao().setPlayerRole(sender.user_id(), body.role());
             PlayerDao.getDao().setPlayerRole(other.user_id(), otherRole);
             context.getSSE().emit("wait_for_role_" + game_id, "{\"role\":\"" + otherRole + "\"}");
-
+            
             response.json("{\"role\":\"" + body.role() + "\"}");
         } catch (SQLException e) {
             response.serverError("Erreur lors de la sélection du rôle");
             System.err.println("Erreur lors de la sélection du rôle");
         }
+    }
+
+    public static void getCards(WebServerContext context) {
+        WebServerResponse response = context.getResponse();
+        String game_id = context.getRequest().getParam("game_id");
+        // String user_id = context.getRequest().getuser_id("user");
+        // try {
+        // List<Player> players = PlayerDao.getDao().getPlayerByGameCode(game_id);
+        // Player player = players.stream().filter(p ->
+        // p.user_id().equals(user_id)).findFirst().orElse(null);
+        // if (player == null) {
+        // response.badRequest("Joueur non trouvé");
+        // return;
+        // }
+        // response.json("{\"cards\":[\"carte1\",\"carte2\",\"carte3\"]}");
+        // } catch (SQLException e) {
+        // response.serverError("Erreur lors de la récupération des cartes");
+        // System.err.println("Erreur lors de la récupération des cartes");
+        // }
     }
 }
