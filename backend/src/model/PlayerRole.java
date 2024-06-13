@@ -8,4 +8,8 @@ public class PlayerRole {
     public static boolean isValid(String role) {
         return role.equals(WORD_MASTER) || role.equals(GUESS_MASTER);
     }
+
+    public static String getOppositeRole(String role) {
+        return role.equals(WORD_MASTER) ? GUESS_MASTER : WORD_MASTER;
+    }
 }

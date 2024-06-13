@@ -49,4 +49,12 @@ public class MySQLDatabase {
     public PreparedStatement prepareStatement(String sqlQuery) throws SQLException {
         return this.connection.prepareStatement(sqlQuery);
     }
+
+    public void setAutoCommit(boolean autoCommit) throws SQLException {
+        this.connection.setAutoCommit(autoCommit);
+    }
+
+    public void commit() throws SQLException {
+        this.connection.commit();
+    }
 }

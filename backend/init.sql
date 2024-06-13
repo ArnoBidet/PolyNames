@@ -44,3 +44,10 @@ CREATE TABLE IF NOT EXISTS hint (
     CONSTRAINT pk_hint PRIMARY KEY (game_id, game_round),
     CONSTRAINT fk_hint_game_id FOREIGN KEY (game_id) REFERENCES game(game_id)
 );
+
+
+
+CREATE VIEW v_card AS
+SELECT game_id, word, grid_row, grid_col, card_type, is_discovered
+FROM card c, word w
+WHERE c.word_id = w.id;

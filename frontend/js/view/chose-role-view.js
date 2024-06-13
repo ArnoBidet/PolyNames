@@ -15,14 +15,14 @@ export class ChoseRoleView extends View{
         fetch("/frontend/templates/chose-role.html").then(async response => {
             this.root.innerHTML += await response.text();
             this.b_word_master.addEventListener('click', () => {
-                GameService.choseRole(PlayerRole.GUESS_MASTER).then((data) => {
+                GameService.choseRole(PlayerRole.WORD_MASTER).then((data) => {
                     if (data.role) {
                         new InGameView().render(data.role);
                     }
                 });
             });
             this.b_guess_master.addEventListener('click', () => {
-                GameService.choseRole(PlayerRole.WORD_MASTER).then((data) => {
+                GameService.choseRole(PlayerRole.GUESS_MASTER).then((data) => {
                     if (data.role) {
                         new InGameView().render(data.role);
                     }

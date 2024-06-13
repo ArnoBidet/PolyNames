@@ -3,11 +3,14 @@ package controller;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.UUID;
-
+import dao.CardDao;
 import dao.GameDao;
 import dao.PlayerDao;
+import dao.WordDao;
+import model.Card;
 import model.ChooseRoleRequest;
 import model.Game;
+import model.Word;
 import model.Player;
 import model.PlayerRole;
 import webserver.WebServerContext;
@@ -22,6 +25,9 @@ public class GameController {
         try {
             GameDao.getDao().createGame(game_id);
             PlayerDao.getDao().createPlayer(user_id, game_id, true);
+
+            List<Word> words = WordDao.getDao().getRandomList();
+            CardDao.getDao().createCards(game_id, words);
 
             response.json("{\"game_id\":\"" + game_id + "\", \"user_id\":\"" + user_id + "\"}");
         } catch (SQLException e) {
@@ -64,7 +70,6 @@ public class GameController {
                     .orElse(null);
             Player other = players.stream().filter(player -> !player.user_id().equals(body.user_id())).findFirst()
                     .orElse(null);
-            System.out.println(players);
             if (sender == null) {
                 response.badRequest("Joueur non trouvé");
                 return;
@@ -75,20 +80,19 @@ public class GameController {
                 response.forbidden("Vous n'êtes pas l'hôte de la partie");
                 return;
             }
-
-            if (!PlayerRole.isValid(body.role())) {
+            String hostRole = body.role();
+            if (!PlayerRole.isValid(hostRole)) {
                 response.badRequest(
                         "Rôle invalide, doit être " + PlayerRole.GUESS_MASTER + " ou " + PlayerRole.WORD_MASTER);
                 return;
             }
 
-            String otherRole = body.role().equals(PlayerRole.GUESS_MASTER) ? PlayerRole.WORD_MASTER
-                    : PlayerRole.GUESS_MASTER;
-            PlayerDao.getDao().setPlayerRole(sender.user_id(), body.role());
+            String otherRole = PlayerRole.getOppositeRole(hostRole);
+            PlayerDao.getDao().setPlayerRole(sender.user_id(), hostRole);
             PlayerDao.getDao().setPlayerRole(other.user_id(), otherRole);
             context.getSSE().emit("wait_for_role_" + game_id, "{\"role\":\"" + otherRole + "\"}");
-            
-            response.json("{\"role\":\"" + body.role() + "\"}");
+
+            response.json("{\"role\":\"" + hostRole + "\"}");
         } catch (SQLException e) {
             response.serverError("Erreur lors de la sélection du rôle");
             System.err.println("Erreur lors de la sélection du rôle");
@@ -98,19 +102,27 @@ public class GameController {
     public static void getCards(WebServerContext context) {
         WebServerResponse response = context.getResponse();
         String game_id = context.getRequest().getParam("game_id");
-        // String user_id = context.getRequest().getuser_id("user");
-        // try {
-        // List<Player> players = PlayerDao.getDao().getPlayerByGameCode(game_id);
-        // Player player = players.stream().filter(p ->
-        // p.user_id().equals(user_id)).findFirst().orElse(null);
-        // if (player == null) {
-        // response.badRequest("Joueur non trouvé");
-        // return;
-        // }
-        // response.json("{\"cards\":[\"carte1\",\"carte2\",\"carte3\"]}");
-        // } catch (SQLException e) {
-        // response.serverError("Erreur lors de la récupération des cartes");
-        // System.err.println("Erreur lors de la récupération des cartes");
-        // }
+        String user_id = context.getRequest().getParam("user_id");
+        try {
+            List<Player> players = PlayerDao.getDao().getPlayerByGameCode(game_id);
+            Player player = players.stream().filter(p -> p.user_id().equals(user_id)).findFirst().orElse(null);
+            if (player == null) {
+                response.badRequest("Joueur non trouvé");
+                return;
+            }
+            List<Card> cards = CardDao.getDao().getCards(game_id);
+            System.out.println(player.user_id() + "" + user_id);
+            System.out.println(player.player_role() + " " + player.player_role().equals(PlayerRole.GUESS_MASTER));
+            if (player.player_role().equals(PlayerRole.GUESS_MASTER)) {
+                cards = cards.stream().map(card -> {
+                    return new Card(card.game_id(), card.grid_row(), card.grid_col(), card.word(), null, false);
+                }).toList();
+            }
+
+            response.json(cards);
+        } catch (SQLException e) {
+            response.serverError("Erreur lors de la récupération des cartes");
+            System.err.println("Erreur lors de la récupération des cartes");
+        }
     }
 }

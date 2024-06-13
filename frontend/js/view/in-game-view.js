@@ -1,191 +1,79 @@
 import clearView from "./utils/clear-view.js";
 import View from "./view.js";
+import { role } from "../utils/sessionstorage.js";
+import { PlayerRole } from "../utils/playerRole.js";
+import GameService from "../service/game-service.js";
 
 export default class InGameView extends View {
-    constructor() {
-        super();
-    }
+  get #cards() {
+    return document.querySelectorAll(".card");
+  }
 
-    render() {
-        clearView();
-        fetch("/frontend/templates/in-game-view.html").then(response => response.text()).then(async text => {
-            this.root.innerHTML += text;
-          
-            let card_template = await fetch("/frontend/templates/card.html").then(response => response.text())
-            console.log();
-            let cardGrid = document.querySelector(".card-grid");
+  constructor() {
+    super();
+  }
 
-            list_cards.forEach((card, index) => {
-                let current_card = card_template;
-                current_card = current_card.replace("data-row", `data-row="${card.grid_row}"`);
-                current_card = current_card.replace("data-column", `data-column="${card.grid_col}"`);
-                current_card = current_card.replaceAll("{word}", card.word);
-                cardGrid.innerHTML += current_card;
-                current_card = cardGrid.querySelector(".card[data-row='" + card.grid_row + "'][data-column='" + card.grid_col + "'");
-                current_card.style.gridRow = card.grid_row + 1;
-                current_card.style.gridColumn = card.grid_col + 1;
-                setTimeout(() => {
-                  current_card.classList.add("animated");
-                }, 50 * index);
-            });
-            const cards = document.querySelectorAll(".card");
-            cards.forEach((card) => {
-                card.style.rotate = `${Math.random() * 6 - 3}deg`;
-            });
-            root.appendChild(cardGrid);
-        });
-    }
+  render() {
+    clearView();
+    fetch("/frontend/templates/in-game-view.html").then(async (response) => {
+      this.root.innerHTML += await response.text();
+      const card_list = await GameService.getCards();
+      this.#renderGrid(card_list);
+      if (role() == PlayerRole.WORD_MASTER) {
+      } else {
+        this.#renderGuessMaster();
+      }
+    });
+  }
+
+  async #renderGrid(card_list) {
+    console.log(card_list);
+    let card_template = await fetch("/frontend/templates/card.html").then(
+      (response) => response.text()
+    );
+
+    let cardGrid = document.querySelector(".card-grid");
+
+    card_list.forEach(card => {
+      let current_card = card_template;
+      current_card = current_card.replace(
+        "data-row",
+        `data-row="${card.grid_row}"`
+      );
+      current_card = current_card.replace(
+        "data-column",
+        `data-column="${card.grid_col}"`
+      );
+      current_card = current_card.replaceAll("{word}", card.word);
+      cardGrid.innerHTML += current_card;
+      current_card = cardGrid.querySelector(
+        ".card[data-row='" +
+          card.grid_row +
+          "'][data-column='" +
+          card.grid_col +
+          "'"
+      );
+      current_card.style.gridRow = card.grid_row + 1;
+      current_card.style.gridColumn = card.grid_col + 1;
+    });
+    this.#cards.forEach((card) => {
+      card.style.rotate = `${Math.random() * 6 - 3}deg`;
+    });
+    root.appendChild(cardGrid);
+    this.#cards.forEach((card, index) => {
+      setTimeout(() => {
+        card.classList.add("animated");
+      }, 50 * index);
+    });
+  }
+
+  #renderWordMaster() {
+    let wordMaster = document.querySelector(".word-master");
+    // wordMaster.style.display = "block";
+  }
+
+  #renderGuessMaster() {
+    let guessMaster = document.querySelector(".guess-master");
+    // guessMaster.style.display = "block";
+  }
 }
-
-let list_cards = [
-    {
-      word: "Bateau",
-      grid_row: 0,
-      grid_col: 0,
-      is_discovered: false,
-    },
-    {
-      word: "Étoile",
-      grid_row: 1,
-      grid_col: 0,
-      is_discovered: false,
-    },
-    {
-      word: "Reine",
-      grid_row: 2,
-      grid_col: 0,
-      is_discovered: false,
-    },
-    {
-      word: "Souris",
-      grid_row: 3,
-      grid_col: 0,
-      is_discovered: false,
-    },
-    {
-      word: "Château",
-      grid_row: 4,
-      grid_col: 0,
-      is_discovered: false,
-    },
-    {
-      word: "Plume",
-      grid_row: 0,
-      grid_col: 1,
-      is_discovered: false,
-    },
-    {
-      word: "Aigle",
-      grid_row: 1,
-      grid_col: 1,
-      is_discovered: false,
-    },
-    {
-      word: "Banane",
-      grid_row: 2,
-      grid_col: 1,
-      is_discovered: false,
-    },
-    {
-      word: "Magie",
-      grid_row: 3,
-      grid_col: 1,
-      is_discovered: false,
-    },
-    {
-      word: "Océan",
-      grid_row: 4,
-      grid_col: 1,
-      is_discovered: false,
-    },
-    {
-      word: "Trompette",
-      grid_row: 0,
-      grid_col: 2,
-      is_discovered: false,
-    },
-    {
-      word: "Fusée",
-      grid_row: 1,
-      grid_col: 2,
-      is_discovered: false,
-    },
-    {
-      word: "Diamant",
-      grid_row: 2,
-      grid_col: 2,
-      is_discovered: false,
-    },
-    {
-      word: "Forêt",
-      grid_row: 3,
-      grid_col: 2,
-      is_discovered: false,
-    },
-    {
-      word: "Drôle",
-      grid_row: 4,
-      grid_col: 2,
-      is_discovered: false,
-    },
-    {
-      word: "Fantôme",
-      grid_row: 0,
-      grid_col: 3,
-      is_discovered: false,
-    },
-    {
-      word: "Galaxie",
-      grid_row: 1,
-      grid_col: 3,
-      is_discovered: false,
-    },
-    {
-      word: "Horloge",
-      grid_row: 2,
-      grid_col: 3,
-      is_discovered: false,
-    },
-    {
-      word: "Montagne",
-      grid_row: 3,
-      grid_col: 3,
-      is_discovered: false,
-    },
-    {
-      word: "Lune",
-      grid_row: 4,
-      grid_col: 3,
-      is_discovered: false,
-    },
-    {
-      word: "Piano",
-      grid_row: 0,
-      grid_col: 4,
-      is_discovered: false,
-    },
-    {
-      word: "Robot",
-      grid_row: 1,
-      grid_col: 4,
-      is_discovered: false,
-    },
-    {
-      word: "Sirène",
-      grid_row: 2,
-      grid_col: 4,
-      is_discovered: false,
-    },
-    {
-      word: "Tigre",
-      grid_row: 3,
-      grid_col: 4,
-      is_discovered: false,
-    },
-    {
-      word: "Voleur",
-      grid_row: 4,
-      grid_col: 4,
-      is_discovered: false,
-    },
-  ];

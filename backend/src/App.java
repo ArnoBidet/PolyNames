@@ -25,7 +25,7 @@ public class App {
                 });
 
         webserver.getRouter().get(
-                "/api/:game_id/get-cards",
+                "/api/:game_id/cards/:user_id",
                 (WebServerContext context) -> {
                     GameController.getCards(context);
                 });
