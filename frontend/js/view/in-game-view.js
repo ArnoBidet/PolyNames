@@ -10,7 +10,7 @@ export default class InGameView extends View {
   }
 
   get #announcement() {
-    return document.querySelectorAll("#announcement");
+    return document.querySelector("#announcement");
   }
 
   constructor() {
@@ -95,7 +95,8 @@ export default class InGameView extends View {
   }
 
   #renderGuessMaster() {
-    document.querySelector(".middle-pannel").innerHTML = "";
-    this.#announcement.innerHTML = "Le maître des mots est en train de choisir un mot";
+    document.querySelector("#wm-inputs").style.display = "none";
+    document.querySelector("#send-hint").style.display = "none";
+    this.#announcement.innerHTML = "Choix en cours";
   }
 }

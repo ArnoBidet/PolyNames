@@ -75,7 +75,7 @@ body:has(.master-title) {
   align-items: center;
 }
 #join-code span {
-  padding: 0.5rem;
+  padding: 0.75rem;
   border-radius: 0.25rem;
   background-color: rgba(0, 0, 0, 0.5);
   font-size: 1.5rem;
@@ -202,6 +202,16 @@ body:has(.master-title) {
   animation: shake 0.3s;
 }
 
+#copied-message {
+  position: absolute;
+  margin-top: -6rem;
+  margin-left: 9.5rem;
+  background-color: rgba(0, 0, 0, 0.5);
+  padding: 0.5rem;
+  font-size: 1rem;
+  border-radius: 0.5rem;
+}
+
 @keyframes shake {
   25% {
     transform: rotate(calc(var(--angle) * -1));
@@ -217,6 +227,10 @@ body:has(.master-title) {
 }
 
 /* Generic */
+
+p{
+  font-size: 1.25rem;
+}
 
 button {
   cursor: pointer;
@@ -307,7 +321,7 @@ button:hover:not(:disabled):not(.word-master-card) {
 }
 
 .side-pannel-container,
-.side-pannel-header  {
+.side-pannel-header {
   display: flex;
   justify-content: center;
   flex-direction: column;

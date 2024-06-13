@@ -19,8 +19,10 @@ export default class JoinCodeView extends View {
         }
         const message = document.createElement("div");
         message.id = "copied-message";
-        message.innerText = "Copied!";
-
+        message.innerText = "Copié !";
+        setTimeout(() => {
+            message.remove();
+        }, 2000);
         return message;
     }
     render() {
