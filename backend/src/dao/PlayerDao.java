@@ -23,7 +23,6 @@ public class PlayerDao extends GenericDao {
     }
 
     public Player getPlayer(String user_id) throws SQLException {
-        System.out.println("getPlayer" + user_id);
         PreparedStatement statement = this.database
                 .prepareStatement("SELECT user_id, host, player_role, game_id FROM player WHERE id = ?");
         statement.setString(1, user_id);

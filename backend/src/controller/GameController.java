@@ -111,8 +111,6 @@ public class GameController {
                 return;
             }
             List<Card> cards = CardDao.getDao().getCards(game_id);
-            System.out.println(player.user_id() + "" + user_id);
-            System.out.println(player.player_role() + " " + player.player_role().equals(PlayerRole.GUESS_MASTER));
             if (player.player_role().equals(PlayerRole.GUESS_MASTER)) {
                 cards = cards.stream().map(card -> {
                     return new Card(card.game_id(), card.grid_row(), card.grid_col(), card.word(), null, false);
