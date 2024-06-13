@@ -1,9 +1,9 @@
 export class CartType {
-	static #_ASSASSIN = "ASSASSIN";
+	static #_KILLER = "KILLER";
 	static #_NEUTRAL = "NEUTRAL";
-	static #_WORD = "WORD";
+	static #_WORD = "GUESS";
 
-	static get ASSASSIN() { return this.#_ASSASSIN; }
+	static get KILLER() { return this.#_KILLER; }
 	static get NEUTRAL() { return this.#_NEUTRAL; }
-	static get WORD() { return this.#_WORD; }
+	static get GUESS() { return this.#_WORD; }
 }

@@ -17,7 +17,7 @@ public class CardDao extends GenericDao {
     final int GRID_COL = 5;
 
     final int GUESS_NUMBER = 8;
-    final int ASSASSIN_NUMBER = 2;
+    final int KILLER_NUMBER = 2;
 
     private CardDao() {
         super();
@@ -57,7 +57,7 @@ public class CardDao extends GenericDao {
         for (Word word : words) 
             neutrals.add(word);
         
-        List<Word> assassin = new ArrayList<Word>();
+        List<Word> killer = new ArrayList<Word>();
         List<Word> guess = new ArrayList<Word>();
 
         for (int i = 0; i < GUESS_NUMBER; i++) {
@@ -65,9 +65,9 @@ public class CardDao extends GenericDao {
             guess.add(neutrals.get(index));
             neutrals.remove(index);
         }
-        for (int i = 0; i < ASSASSIN_NUMBER; i++) {
+        for (int i = 0; i < KILLER_NUMBER; i++) {
             int index = (int) (Math.random() * neutrals.size());
-            assassin.add(neutrals.get(index));
+            killer.add(neutrals.get(index));
             neutrals.remove(index);
         }
 
@@ -81,10 +81,10 @@ public class CardDao extends GenericDao {
                 int i = row * GRID_COL + col;
                 Word word = words.get(i);
                 String card_type = CardType.NEUTRAL;
-                if (assassin.contains(word)) {
-                    card_type = CardType.ASSASSIN;
+                if (killer.contains(word)) {
+                    card_type = CardType.KILLER;
                 } else if (guess.contains(word)) {
-                    card_type = CardType.WORD;
+                    card_type = CardType.GUESS;
                 }
                 statement.setString(1, game_id);
                 statement.setInt(2, row);
@@ -99,7 +99,7 @@ public class CardDao extends GenericDao {
             this.database.commit();
             this.database.setAutoCommit(true);
         } catch (BatchUpdateException b) {
-            System.err.println(b.getNextException());
+            System.err.println("BatchUpdateException : "+b.getNextException());
         }
     }
 

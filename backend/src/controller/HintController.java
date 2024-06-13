@@ -94,11 +94,11 @@ public class HintController {
             int found_cards = last_hint.found_cards();
             boolean is_done = last_hint.is_done();
 
-            if(card.card_type()==CardType.ASSASSIN){
+            if(card.card_type()==CardType.KILLER){
                 //@TODO partie terminée 
                 return;
             }
-            else if(card.card_type()==CardType.WORD){
+            else if(card.card_type()==CardType.GUESS){
                 found_cards++;
                 is_done = last_hint.associated_cards()+1 == found_cards;
             }

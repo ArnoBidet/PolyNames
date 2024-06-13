@@ -34,7 +34,7 @@ export default class InGameView extends View {
 
     let cardGrid = document.querySelector(".card-grid");
 
-    card_list.forEach(card => {
+    card_list.forEach((card, index) => {
       let current_card = card_template;
       current_card = current_card.replace(
         "data-row",
@@ -47,11 +47,7 @@ export default class InGameView extends View {
       current_card = current_card.replaceAll("{word}", card.word);
       cardGrid.innerHTML += current_card;
       current_card = cardGrid.querySelector(
-        ".card[data-row='" +
-          card.grid_row +
-          "'][data-column='" +
-          card.grid_col +
-          "'"
+        `.card[data-row='${card.grid_row}'][data-column='${card.grid_col}'`
       );
       current_card.style.gridRow = card.grid_row + 1;
       current_card.style.gridColumn = card.grid_col + 1;
@@ -60,16 +56,34 @@ export default class InGameView extends View {
       card.style.rotate = `${Math.random() * 6 - 3}deg`;
     });
     root.appendChild(cardGrid);
-    this.#cards.forEach((card, index) => {
+    this.#animate(card_list);
+    if (role() == PlayerRole.WORD_MASTER) {
+      this.#renderWordMaster(card_list);
+    } else {
+      this.#renderGuessMaster();
+    }
+  }
+
+  #animate(card_list) {
+    card_list.sort((a,b)=>{
+      return a.grid_row - b.grid_row - (a.grid_col - b.grid_col);
+    }).forEach((card, index) => {
+      let current_card = document.querySelector(
+        `.card[data-row='${card.grid_row}'][data-column='${card.grid_col}'`);
       setTimeout(() => {
-        card.classList.add("animated");
+        current_card.classList.add("animated");
       }, 50 * index);
     });
   }
 
-  #renderWordMaster() {
-    let wordMaster = document.querySelector(".word-master");
-    // wordMaster.style.display = "block";
+  #renderWordMaster(card_list) {
+    card_list.forEach((card) => {
+      document
+        .querySelector(
+          `.card[data-row='${card.grid_row}'][data-column='${card.grid_col}'`
+        )
+        .classList.add(card.card_type.toLowerCase());
+    });
   }
 
   #renderGuessMaster() {
