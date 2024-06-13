@@ -3,6 +3,11 @@ export default class View {
         return document.getElementById('root');
     }
 
+
+    get overlay() {
+        return document.getElementById('overlay');
+    }
+
     render() {
         throw new Error('Method not implemented');
     }

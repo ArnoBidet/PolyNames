@@ -65,15 +65,18 @@ export default class InGameView extends View {
   }
 
   #animate(card_list) {
-    card_list.sort((a,b)=>{
-      return a.grid_row - b.grid_row - (a.grid_col - b.grid_col);
-    }).forEach((card, index) => {
-      let current_card = document.querySelector(
-        `.card[data-row='${card.grid_row}'][data-column='${card.grid_col}'`);
-      setTimeout(() => {
-        current_card.classList.add("animated");
-      }, 50 * index);
-    });
+    card_list
+      .sort((a, b) => {
+        return a.grid_row - b.grid_row - (a.grid_col - b.grid_col);
+      })
+      .forEach((card, index) => {
+        let current_card = document.querySelector(
+          `.card[data-row='${card.grid_row}'][data-column='${card.grid_col}'`
+        );
+        setTimeout(() => {
+          current_card.classList.add("animated");
+        }, 50 * index);
+      });
   }
 
   #renderWordMaster(card_list) {
@@ -84,10 +87,18 @@ export default class InGameView extends View {
         )
         .classList.add(card.card_type.toLowerCase());
     });
+    fetch("/frontend/templates/word-master-overlay.html").then(
+      async (response) => {
+        this.overlay.innerHTML = await response.text();
+      }
+    );
   }
 
   #renderGuessMaster() {
-    let guessMaster = document.querySelector(".guess-master");
-    // guessMaster.style.display = "block";
+    fetch("/frontend/templates/guess-master-overlay.html").then(
+      async (response) => {
+        this.overlay.innerHTML = await response.text();
+      }
+    );
   }
 }
