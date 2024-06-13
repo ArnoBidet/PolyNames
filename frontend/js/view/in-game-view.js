@@ -9,6 +9,10 @@ export default class InGameView extends View {
     return document.querySelectorAll(".card");
   }
 
+  get #announcement() {
+    return document.querySelectorAll("#announcement");
+  }
+
   constructor() {
     super();
   }
@@ -86,11 +90,12 @@ export default class InGameView extends View {
         .querySelector(
           `.card[data-row='${card.grid_row}'][data-column='${card.grid_col}'`
         )
-        .classList.add(card.card_type.toLowerCase());
+        .classList.add(card.card_type.toLowerCase(), "word-master-card");
     });
   }
 
   #renderGuessMaster() {
     document.querySelector(".middle-pannel").innerHTML = "";
+    this.#announcement.innerHTML = "Le maître des mots est en train de choisir un mot";
   }
 }
