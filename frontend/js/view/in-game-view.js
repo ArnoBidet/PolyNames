@@ -27,10 +27,11 @@ export default class InGameView extends View {
   }
 
   async #renderGrid(card_list) {
-    console.log(card_list);
     let card_template = await fetch("/frontend/templates/card.html").then(
       (response) => response.text()
     );
+
+    document.querySelector("h1.master-title").innerHTML = "Maître des "+(role() === PlayerRole.WORD_MASTER ? "mots":"intuitions");
 
     let cardGrid = document.querySelector(".card-grid");
 
@@ -55,9 +56,9 @@ export default class InGameView extends View {
     this.#cards.forEach((card) => {
       card.style.rotate = `${Math.random() * 6 - 3}deg`;
     });
-    root.appendChild(cardGrid);
     this.#animate(card_list);
-    if (role() == PlayerRole.WORD_MASTER) {
+
+    if (role() === PlayerRole.WORD_MASTER) {
       this.#renderWordMaster(card_list);
     } else {
       this.#renderGuessMaster();
@@ -87,18 +88,9 @@ export default class InGameView extends View {
         )
         .classList.add(card.card_type.toLowerCase());
     });
-    fetch("/frontend/templates/word-master-overlay.html").then(
-      async (response) => {
-        this.overlay.innerHTML = await response.text();
-      }
-    );
   }
 
   #renderGuessMaster() {
-    fetch("/frontend/templates/guess-master-overlay.html").then(
-      async (response) => {
-        this.overlay.innerHTML = await response.text();
-      }
-    );
+    document.querySelector(".middle-pannel").innerHTML = "";
   }
 }
