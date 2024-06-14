@@ -201,6 +201,7 @@ export default class InGameView extends View {
 
   #onGuessResponse(data) {
     this.#newGuess(data);
+    this.#updateRemainingGuessForRound();
     if (data.card_type === "KILLER") {
       this.#onDeath();
     } else if (data.card_type === "GUESS") {
@@ -210,23 +211,27 @@ export default class InGameView extends View {
 
   #onHintResponse(data) {
     this.#newHint(data);
-    if(role() === PlayerRole.WORD_MASTER) {
+    document.querySelector("#last-hint-value").innerHTML = data.hint;
+    document.querySelector("#last-hint-linked").innerHTML = data.associated_guess;
+    this.#updateRemainingGuessForRound();
+    if (role() === PlayerRole.WORD_MASTER) {
       this.#hintElement.value = "";
       this.#associatedGuessElement.value = "";
       this.#sendHint.disabled = true;
       this.#hintElement.disabled = true
       this.#associatedGuessElement.disabled = true;
-      this.#announcement.innerHTML = `L'autre maître des mots doit deviner le mot associé à l'indice : <br>"${data.hint}"`;
-    }else {
-      this.#announcement.innerHTML = `Indice : "${data.hint}<br>"`;
+      this.#announcement.innerHTML = `À l'autre joueur`;
+    } else {
+      this.#announcement.innerHTML = `À vous`;
+
       this.#toggleCardClickability(true);
     }
   }
 
-  #onFound(){
+  #onFound() {
     this.score = document.querySelector("#remaining");
     this.score.innerHTML = parseInt(this.score.innerHTML) - 1;
-    if(this.score.innerHTML == 0){
+    if (this.score.innerHTML == 0) {
       this.score = document.querySelector("span#score");
       this.root.innerHTML = "Vous avez gagné !<br> Votre score est de " + this.score.innerHTML + "<br> Vous pouvez recommencer en cliquant <a href='/frontend/'><button class=\"primary\">ici</button></a>";
       this.#toggleCardClickability();
@@ -236,5 +241,15 @@ export default class InGameView extends View {
     this.score = document.querySelector("span#score");
     this.root.innerHTML = "Vous avez perdu !<br> Votre score est de " + this.score.innerHTML + "<br> Vous pouvez recommencer en cliquant <a href='/frontend/'><button class=\"primary\">ici</button></a>";
     this.#toggleCardClickability();
+  }
+
+  #updateRemainingGuessForRound() {
+    let lastHintRemaining = document.querySelector("#last-hint-remaining");
+    if (lastHintRemaining.innerHTML === "-"){
+      let nextValue = parseInt(document.querySelector("#last-hint-linked").innerHTML) + 1
+      nextValue = nextValue > 8 ? 8 : nextValue;
+      lastHintRemaining.innerHTML = nextValue;
+    }else
+      lastHintRemaining.innerHTML = parseInt(lastHintRemaining.innerHTML) - 1;
   }
 }

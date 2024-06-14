@@ -34,14 +34,21 @@
       <button id="send-give-up" class="primary" disabled="true">Abandonner</button>
     </div>
   </div>
-  <div id="events" class="side-pannel">
-    <h2>Évènements</h2>
-    <div class="side-pannel-header">
-      <div class="line">
-        <span>Évènement</span>
-        <span>Action</span>
+  <div id="last-hint-container" class="side-pannel">
+    <h2>Dernier indice</h2>
+    
+    <div class="cell-container">
+      <div class="cell">
+        <span>Indice</span>
+        <span id="last-hint-value">-</span>
       </div>
+      <div class="cell">
+        <span>Cartes liées</span>
+        <span id="last-hint-linked">-</span>
+      </div>
+      <div class="cell">
+        <span>Propositions restantes</span>
+        <span id="last-hint-remaining">-</span>
     </div>
-    <div class="side-pannel-container"></div>
   </div>
 </div>
