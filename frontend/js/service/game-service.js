@@ -83,4 +83,22 @@ export default class GameService {
     );
     return await response.json();
   }
+
+  static async makeGuess(row, col) {
+    const response = await fetch(
+      `${BASE_URL}api/${game_id()}/guess`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          grid_row : row,
+          grid_col : col,
+          user_id: user_id()
+        }),
+      }
+    );
+    return await response.json();
+  }
 }

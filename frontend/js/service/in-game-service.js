@@ -11,9 +11,15 @@ export default class InGameService {
     return await response.json();
   }
 
-  static async subscribeToGameUpdates(callback) {
+  static async subscribeWordMasterUpdates(callback) {
     let sseClient = new SSEClient(SSE_URL);
     await sseClient.connect();
-    await sseClient.subscribe("game_flow_" + user_id() + "_" + game_id(), callback);
+    await sseClient.subscribe("word_master_update_" + user_id() + "_" + game_id(), callback);
+  }
+
+  static async subscribeGuessMasterUpdates(callback) {
+    let sseClient = new SSEClient(SSE_URL);
+    await sseClient.connect();
+    await sseClient.subscribe("guess_master_update_" + user_id() + "_" + game_id(), callback);
   }
 }
