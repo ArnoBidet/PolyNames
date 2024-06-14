@@ -180,6 +180,8 @@ export default class InGameView extends View {
 
   #evaluateInput() {
     this.#inputErrorsContainer.innerHTML = "";
+    this.#hintElement.value = this.#hintElement.value.trim();
+    this.#hintElement.value =this.#hintElement.value.replace(/[^a-zA-Z-]+/g, '')
     if (this.#hintElement.value === "" || this.#associatedGuessElement.value === "") {
       this.#sendHint.disabled = true;
     } else {
