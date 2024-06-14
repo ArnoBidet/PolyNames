@@ -11,26 +11,35 @@ export default class InGameView extends View {
   }
 
   get #announcement() {
-    return document.querySelector("#announcement");
+    return document.querySelector("div#announcement");
   }
 
   get #sendHint() {
-    return document.querySelector("#send-hint");
+    return document.querySelector("button#send-hint");
   }
 
-  get #hintValueElement(){
-    return document.querySelector("#wm-hint");
+  get #wmInputsContainer() {
+    return document.querySelector("div#wm-inputs");
   }
+
+  get #gmInputsContainer() {
+    return document.querySelector("div#gm-inputs");
+  }
+
+  get #hintElement() {
+    return document.querySelector("input#wm-hint");
+  }
+
   get #associatedGuessElement() {
-    return document.querySelector("#wm-associated-guess");
+    return document.querySelector("input#wm-associated-guess");
   }
 
-  get #hintContainer(){
-    return document.querySelector("#clues .side-pannel-container");
+  get #hintContainer() {
+    return document.querySelector("div#clues div.side-pannel-container");
   }
 
   get #inputErrorsContainer() {
-    return document.querySelector("#input-errors");
+    return document.querySelector("div#input-errors");
   }
 
   constructor() {
@@ -43,10 +52,6 @@ export default class InGameView extends View {
       this.root.innerHTML += await response.text();
       const card_list = await GameService.getCards();
       this.#renderGrid(card_list);
-      if (role() == PlayerRole.WORD_MASTER) {
-      } else {
-        this.#renderGuessMaster();
-      }
     });
   }
 
@@ -107,6 +112,8 @@ export default class InGameView extends View {
   }
 
   #renderWordMaster(card_list) {
+    this.#announcement.innerHTML = "C'est à vous de donner un indice";
+    this.#gmInputsContainer.style.display = "none";
     card_list.forEach((card) => {
       document
         .querySelector(
@@ -117,26 +124,40 @@ export default class InGameView extends View {
     this.#hintElement.addEventListener("input", this.#evaluateInput.bind(this));
     this.#associatedGuessElement.addEventListener("input", this.#evaluateInput.bind(this));
     this.#evaluateInput();
-    this.#sendHint.addEventListener("click", this.#makeGuess.bind(this));
-  }
-
-  #renderGuessMaster() {
-    document.querySelector("#wm-inputs").style.display = "none";
-    document.querySelector("#send-hint").style.display = "none";
-    this.#announcement.innerHTML = "Choix en cours";
-    InGameService.subscribeToGameUpdates((data) => {
-      data = JSON.parse(data);
+    this.#sendHint.addEventListener("click", this.#makeHint.bind(this));
+    InGameService.subscribeGuessMasterUpdates((data) => {
       this.#newGuess(data);
     });
   }
 
-  async #makeGuess() {
-    let data = await GameService.makeHint(this.#hintValueElement.value, this.#associatedGuessElement.value);
-    data = JSON.parse(data);
-    this.#newGuess(data);
+  #renderGuessMaster() {
+    this.#announcement.innerHTML = "En attente de l'indice du maître des mots";
+    this.#wmInputsContainer.style.display = "none";
+    InGameService.subscribeWordMasterUpdates((data) => {
+      this.#newHint(data);
+      console.log(data);
+      this.#announcement.innerHTML = `Le maître des mots a donné un indice : <br>"${data.hint}"`;
+      this.#toggleCardClickability(true);
+    });
   }
 
-  #newGuess(data) {
+  #makeHint() {
+    GameService.makeHint(this.#hintElement.value, this.#associatedGuessElement.value).then(data => {
+      this.#newHint(data);
+      this.#hintElement.value = "";
+      this.#associatedGuessElement.value = "";
+      this.#sendHint.disabled = true;
+      this.#hintElement.disabled = true
+      this.#associatedGuessElement.disabled = true;
+    });
+  }
+  #makeGuess(row, col) {
+    GameService.makeGuess(row, col).then(data => {
+      this.#newGuess(data);
+    });
+  }
+
+  #newHint(data) {
     let newHint = document.createElement("div");
     newHint.classList.add("line");
     let hint = document.createElement("span");
@@ -146,6 +167,15 @@ export default class InGameView extends View {
     newHint.append(hint);
     newHint.append(associated_guess);
     this.#hintContainer.prepend(newHint);
+  }
+
+  #newGuess(data) {
+    let card = document.querySelector(`.card[data-row='${data.grid_row}'][data-column='${data.grid_col}'`);
+    card.classList.add(data.card_type.toLowerCase(), "revealed");
+
+    card.classList.remove("clickable");
+    let clone = card.cloneNode(true);
+    card.parentNode.replaceChild(clone, card);
   }
 
   #evaluateInput() {
@@ -163,5 +193,19 @@ export default class InGameView extends View {
       this.#sendHint.disabled = true;
       this.#inputErrorsContainer.innerHTML += "<span>Le mot doit contenir moins de 30 caractères</span>";
     }
+  }
+
+  #toggleCardClickability() {
+    this.#cards.forEach((card) => {
+      if (card.classList.contains("revealed"))
+        return
+      if (!card.classList.contains("clickable")) {
+        card.classList.add("clickable");
+        card.addEventListener("click", () => this.#makeGuess(card.dataset.row, card.dataset.column));
+      } else {
+        card.classList.remove("clickable");
+        card.removeEventListener("click", () => this.#makeGuess(card.dataset.row, card.dataset.column));
+      }
+    });
   }
 }

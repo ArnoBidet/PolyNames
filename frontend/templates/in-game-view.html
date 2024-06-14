@@ -13,13 +13,24 @@
     <div class="side-pannel-container"></div>
   </div>
   <div class="middle-pannel">
-    <div id="announcement">À vous de jouer !</div>
+    <div id="announcement"></div>
     <div id="wm-inputs">
-      <input id="wm-hint" type="text" placeholder="Indice" />
-      <input id="wm-associated-guess" type="number" min="1" max="8" placeholder="Carte liées" />
+      <div class="fields">
+        <input id="wm-hint" type="text" placeholder="Indice" />
+        <input
+          id="wm-associated-guess"
+          type="number"
+          min="1"
+          max="8"
+          placeholder="Carte liées"
+        />
+      </div>
+      <div id="input-errors"></div>
+      <button id="send-hint" class="primary">Envoyer</button>
     </div>
-    <div id="input-errors"></div>
-    <button id="send-hint" class="primary">Envoyer</button>
+    <div id="gm-inputs">
+      <button id="send-give-up" class="primary" disabled="true">Abandonner</button>
+    </div>
   </div>
   <div id="events" class="side-pannel">
     <h2>Évènements</h2>
