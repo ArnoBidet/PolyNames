@@ -286,7 +286,8 @@ export default class InGameView extends View {
 
   #onFound() {
     this.#remaining.innerHTML = parseInt(this.#remaining.innerHTML) - 1;
-    console.log(Math.pow(parseInt(this.#lastHintRemaining.innerHTML) - 1 - parseInt(this.#lastHintLinked.innerHTML), 2));
+    let foundForRoundNode = document.querySelector("#clues > div.side-pannel-container > div:nth-child(1) > span:nth-child(3)");
+    foundForRoundNode.innerHTML = parseInt(foundForRoundNode.innerHTML) + 1;
     this.#score.innerHTML = parseInt(this.#score.innerHTML) + Math.pow(parseInt(this.#lastHintRemaining.innerHTML) - 1 - parseInt(this.#lastHintLinked.innerHTML), 2)
     if (this.#remaining.innerHTML == 0) {
       this.root.innerHTML = "Vous avez gagné !<br> Votre score est de " + this.#score.innerHTML + "<br> Vous pouvez recommencer en cliquant <a href='/frontend/'><button class=\"primary\">ici</button></a>";
