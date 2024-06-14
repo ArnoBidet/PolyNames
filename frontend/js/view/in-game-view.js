@@ -112,7 +112,6 @@ export default class InGameView extends View {
   }
 
   #renderWordMaster(card_list) {
-    this.#announcement.innerHTML = "C'est à vous de donner un indice";
     this.#gmInputsContainer.style.display = "none";
     card_list.forEach((card) => {
       document
@@ -126,20 +125,21 @@ export default class InGameView extends View {
     this.#evaluateInput();
     this.#sendHint.addEventListener("click", this.#makeHint.bind(this));
     InGameService.subscribeGuessMasterUpdates(this.#onGuessResponse.bind(this));
+    this.#renderWordMasterTurn();
   }
 
   #renderGuessMaster() {
-    this.#announcement.innerHTML = "En attente de l'indice du maître des mots";
+    this.#renderGuessMasterNotTurn();
     this.#wmInputsContainer.style.display = "none";
     InGameService.subscribeWordMasterUpdates(this.#onHintResponse.bind(this));
   }
+
 
   #makeHint() {
     GameService.makeHint(this.#hintElement.value, this.#associatedGuessElement.value).then(this.#onHintResponse.bind(this));
   }
   #makeGuess(row, col) {
     GameService.makeGuess(row, col).then(this.#onGuessResponse.bind(this));
-
   }
 
   #newHint(data) {
@@ -206,6 +206,15 @@ export default class InGameView extends View {
       this.#onDeath();
     } else if (data.card_type === "GUESS") {
       this.#onFound();
+    } else {
+      document.querySelector("#last-hint-value").innerHTML = "-";
+      document.querySelector("#last-hint-linked").innerHTML = "-";
+      document.querySelector("#last-hint-remaining").innerHTML = "-";
+      if (role() === PlayerRole.WORD_MASTER) {
+        this.#renderWordMasterTurn();
+      } else {
+        this.#renderGuessMasterNotTurn();
+      }
     }
   }
 
@@ -215,17 +224,34 @@ export default class InGameView extends View {
     document.querySelector("#last-hint-linked").innerHTML = data.associated_guess;
     this.#updateRemainingGuessForRound();
     if (role() === PlayerRole.WORD_MASTER) {
-      this.#hintElement.value = "";
-      this.#associatedGuessElement.value = "";
-      this.#sendHint.disabled = true;
-      this.#hintElement.disabled = true
-      this.#associatedGuessElement.disabled = true;
-      this.#announcement.innerHTML = `À l'autre joueur`;
+      this.#renderWordMasterNotTurn()
     } else {
-      this.#announcement.innerHTML = `À vous`;
-
-      this.#toggleCardClickability(true);
+      this.#renderGuessMasterTurn();
     }
+  }
+
+  #renderGuessMasterTurn() {
+    this.#announcement.innerHTML = "Proposez un mot";
+    this.#toggleCardClickability(true);
+  }
+  #renderGuessMasterNotTurn() {
+    this.#announcement.innerHTML = `À l'autre joueur`;
+  }
+  #renderWordMasterTurn() {
+    this.#announcement.innerHTML = "C'est à vous de donner un indice";
+    this.#hintElement.value = "";
+    this.#associatedGuessElement.value = "";
+    this.#sendHint.disabled = false;
+    this.#hintElement.disabled = false
+    this.#associatedGuessElement.disabled = false;
+  }
+  #renderWordMasterNotTurn() {
+    this.#announcement.innerHTML = "C'est à vous de donner un indice";
+    this.#hintElement.value = "";
+    this.#associatedGuessElement.value = "";
+    this.#sendHint.disabled = true;
+    this.#hintElement.disabled = true
+    this.#associatedGuessElement.disabled = true;
   }
 
   #onFound() {
@@ -245,11 +271,11 @@ export default class InGameView extends View {
 
   #updateRemainingGuessForRound() {
     let lastHintRemaining = document.querySelector("#last-hint-remaining");
-    if (lastHintRemaining.innerHTML === "-"){
+    if (lastHintRemaining.innerHTML === "-") {
       let nextValue = parseInt(document.querySelector("#last-hint-linked").innerHTML) + 1
       nextValue = nextValue > 8 ? 8 : nextValue;
       lastHintRemaining.innerHTML = nextValue;
-    }else
+    } else
       lastHintRemaining.innerHTML = parseInt(lastHintRemaining.innerHTML) - 1;
   }
 }
