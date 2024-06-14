@@ -42,6 +42,10 @@ export default class InGameView extends View {
     return document.querySelector("div#input-errors");
   }
 
+  get #buttonGiveUp() {
+    return document.querySelector("button#send-give-up");
+  }
+
   constructor() {
     super();
   }
@@ -132,6 +136,13 @@ export default class InGameView extends View {
     this.#renderGuessMasterNotTurn();
     this.#wmInputsContainer.style.display = "none";
     InGameService.subscribeWordMasterUpdates(this.#onHintResponse.bind(this));
+    this.#buttonGiveUp.addEventListener("click", _ => {
+      if (role() === PlayerRole.WORD_MASTER) {
+        this.#renderWordMasterTurn();
+      } else {
+        this.#renderGuessMasterNotTurn();
+      }
+    });
   }
 
 
@@ -232,9 +243,11 @@ export default class InGameView extends View {
 
   #renderGuessMasterTurn() {
     this.#announcement.innerHTML = "Proposez un mot";
+    this.#buttonGiveUp.disabled = false;
     this.#toggleCardClickability(true);
   }
   #renderGuessMasterNotTurn() {
+    this.#buttonGiveUp.disabled = true;
     this.#announcement.innerHTML = `À l'autre joueur`;
   }
   #renderWordMasterTurn() {
@@ -261,6 +274,14 @@ export default class InGameView extends View {
       this.score = document.querySelector("span#score");
       this.root.innerHTML = "Vous avez gagné !<br> Votre score est de " + this.score.innerHTML + "<br> Vous pouvez recommencer en cliquant <a href='/frontend/'><button class=\"primary\">ici</button></a>";
       this.#toggleCardClickability();
+    }
+
+    if (document.querySelector("#last-hint-remaining").innerHTML == "0") {
+      if (role() === PlayerRole.WORD_MASTER) {
+        this.#renderWordMasterTurn();
+      } else {
+        this.#renderGuessMasterNotTurn();
+      }
     }
   }
   #onDeath() {
