@@ -6,6 +6,7 @@ import GameService from "../service/game-service.js";
 import InGameService from "../service/in-game-service.js";
 
 export default class InGameView extends View {
+  #roundScore = 0;
   get #cards() {
     return document.querySelectorAll(".card");
   }
@@ -44,6 +45,22 @@ export default class InGameView extends View {
 
   get #buttonGiveUp() {
     return document.querySelector("button#send-give-up");
+  }
+
+  get #remaining() {
+    return document.querySelector("#remaining");
+  }
+
+  get #score() {
+    return document.querySelector("#score");
+  }
+
+  get #lastHintLinked() {
+    return document.querySelector("#last-hint-linked");
+  }
+
+  get #lastHintRemaining(){
+    return document.querySelector("#last-hint-remaining");
   }
 
   constructor() {
@@ -219,7 +236,7 @@ export default class InGameView extends View {
       this.#onFound();
     } else {
       document.querySelector("#last-hint-value").innerHTML = "-";
-      document.querySelector("#last-hint-linked").innerHTML = "-";
+      this.#lastHintLinked.innerHTML = "-";
       document.querySelector("#last-hint-remaining").innerHTML = "-";
       if (role() === PlayerRole.WORD_MASTER) {
         this.#renderWordMasterTurn();
@@ -232,7 +249,7 @@ export default class InGameView extends View {
   #onHintResponse(data) {
     this.#newHint(data);
     document.querySelector("#last-hint-value").innerHTML = data.hint;
-    document.querySelector("#last-hint-linked").innerHTML = data.associated_guess;
+    this.#lastHintLinked.innerHTML = data.associated_guess;
     this.#updateRemainingGuessForRound();
     if (role() === PlayerRole.WORD_MASTER) {
       this.#renderWordMasterNotTurn()
@@ -268,11 +285,11 @@ export default class InGameView extends View {
   }
 
   #onFound() {
-    this.score = document.querySelector("#remaining");
-    this.score.innerHTML = parseInt(this.score.innerHTML) - 1;
-    if (this.score.innerHTML == 0) {
-      this.score = document.querySelector("span#score");
-      this.root.innerHTML = "Vous avez gagné !<br> Votre score est de " + this.score.innerHTML + "<br> Vous pouvez recommencer en cliquant <a href='/frontend/'><button class=\"primary\">ici</button></a>";
+    this.#remaining.innerHTML = parseInt(this.#remaining.innerHTML) - 1;
+    console.log(Math.pow(parseInt(this.#lastHintRemaining.innerHTML) - 1 - parseInt(this.#lastHintLinked.innerHTML), 2));
+    this.#score.innerHTML = parseInt(this.#score.innerHTML) + Math.pow(parseInt(this.#lastHintRemaining.innerHTML) - 1 - parseInt(this.#lastHintLinked.innerHTML), 2)
+    if (this.#remaining.innerHTML == 0) {
+      this.root.innerHTML = "Vous avez gagné !<br> Votre score est de " + this.#score.innerHTML + "<br> Vous pouvez recommencer en cliquant <a href='/frontend/'><button class=\"primary\">ici</button></a>";
       this.#toggleCardClickability();
     }
 
@@ -293,7 +310,7 @@ export default class InGameView extends View {
   #updateRemainingGuessForRound() {
     let lastHintRemaining = document.querySelector("#last-hint-remaining");
     if (lastHintRemaining.innerHTML === "-") {
-      let nextValue = parseInt(document.querySelector("#last-hint-linked").innerHTML) + 1
+      let nextValue = parseInt(this.#lastHintLinked.innerHTML) + 1
       nextValue = nextValue > 8 ? 8 : nextValue;
       lastHintRemaining.innerHTML = nextValue;
     } else
