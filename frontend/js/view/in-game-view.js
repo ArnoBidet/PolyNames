@@ -25,6 +25,10 @@ export default class InGameView extends View {
     return document.querySelector("#wm-associated-guess");
   }
 
+  get #hintContainer(){
+    return document.querySelector("#clues .side-pannel-container");
+  }
+
 
   constructor() {
     super();
@@ -106,8 +110,8 @@ export default class InGameView extends View {
           `.card[data-row='${card.grid_row}'][data-column='${card.grid_col}'`
         )
         .classList.add(card.card_type.toLowerCase(), "word-master-card");
-        this.#sendHint.addEventListener("click", this.#makeGuess.bind(this));
     });
+    this.#sendHint.addEventListener("click", this.#makeGuess.bind(this));
   }
 
   #renderGuessMaster() {
@@ -115,16 +119,26 @@ export default class InGameView extends View {
     document.querySelector("#send-hint").style.display = "none";
     this.#announcement.innerHTML = "Choix en cours";
     InGameService.subscribeToGameUpdates((data) => {
-      console.log(data);
-      // if (data.event === "role_chosen") {
-      //   this.#announcement.innerHTML = "Choix effectué";
-      //   document.querySelector("#wm-inputs").style.display = "block";
-      //   document.querySelector("#send-hint").style.display = "block";
-      // }
+      data = JSON.parse(data);
+      this.#newGuess(data);
     });
   }
 
-  #makeGuess() {
-    GameService.makeHint(this.#hintValueElement.value, this.#associatedGuessElement.value);
+  async #makeGuess() {
+    let data = await GameService.makeHint(this.#hintValueElement.value, this.#associatedGuessElement.value);
+    data = JSON.parse(data);
+    this.#newGuess(data);
+  }
+
+  #newGuess(data) {
+    let newHint = document.createElement("div");
+    newHint.classList.add("line");
+    let hint = document.createElement("span");
+    hint.innerHTML = data.hint;
+    let associated_guess = document.createElement("span");
+    associated_guess.innerHTML = data.associated_guess;
+    newHint.append(hint);
+    newHint.append(associated_guess);
+    this.#hintContainer.prepend(newHint);
   }
 }

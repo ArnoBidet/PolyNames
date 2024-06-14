@@ -1,6 +1,7 @@
 package controller;
 
 import java.sql.SQLException;
+import java.util.List;
 
 import dao.CardDao;
 import dao.HintDao;
@@ -26,11 +27,14 @@ public class HintController {
         String game_id = context.getRequest().getParam("game_id");
         String user_id = hint.user_id();
 
-        Player player;
         try {
-            player = PlayerDao.getDao().getPlayer(user_id);
+            List<Player> players = PlayerDao.getDao().getPlayerByGameCode(game_id);
+            Player sender = players.stream().filter(player -> player.user_id().equals(user_id)).findFirst()
+                    .orElse(null);
+            Player other = players.stream().filter(player -> !player.user_id().equals(user_id)).findFirst()
+                    .orElse(null);
 
-            String role = player.player_role();
+            String role = sender.player_role();
 
             if (!role.equals(PlayerRole.WORD_MASTER)) {
                 response.forbidden("Mauvais rôle !");
@@ -41,14 +45,18 @@ public class HintController {
             if (hint.associated_guess() > 8 || hint.associated_guess() < 1) {
                 response.badRequest("Mauvais nombre d'indices !");
             }
-            if (hint.associated_guess()<=0 )|| hint.associated_guess() >= 9){
+            if (hint.associated_guess() <= 0 || hint.associated_guess() >= 9) {
                 response.badRequest("Mauvais nombre de cartes associées, doit être en 1 et 8 !");
             }
 
             Hint last_hint = HintDao.getDao().getLastHint(game_id);
-            int current_round = last_hint != null ? last_hint.game_round()+1 : 0;
-            HintDao.getDao().createHint(game_id, 0, role, current_round);
-            context.getSSE().emit("game_flow_" + user_id + "_" + game_id, "{\"hint\":\"" + hint.hint() + "\", \"associated_guess\":\""+hint.associated_guess()+"\"}");
+            int current_round = last_hint != null ? last_hint.game_round() + 1 : 0;
+            HintDao.getDao().createHint(game_id, current_round, role, hint.associated_guess());
+            System.out.println("game_flow_" + other.user_id() + "_" + game_id);
+            context.getSSE().emit("game_flow_" + other.user_id() + "_" + game_id,
+                    "{\"hint\":\"" + hint.hint() + "\", \"associated_guess\":\"" + hint.associated_guess() + "\"}");
+            response.json(
+                    "{\"hint\":\"" + hint.hint() + "\", \"associated_guess\":\"" + hint.associated_guess() + "\"}");
 
         } catch (SQLException e) {
 
