@@ -29,6 +29,9 @@ export default class InGameView extends View {
     return document.querySelector("#clues .side-pannel-container");
   }
 
+  get #inputErrorsContainer() {
+    return document.querySelector("#input-errors");
+  }
 
   constructor() {
     super();
