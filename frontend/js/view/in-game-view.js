@@ -3,6 +3,7 @@ import View from "./view.js";
 import { role } from "../utils/sessionstorage.js";
 import { PlayerRole } from "../utils/playerRole.js";
 import GameService from "../service/game-service.js";
+import InGameService from "../service/in-game-service.js";
 
 export default class InGameView extends View {
   get #cards() {
@@ -12,6 +13,18 @@ export default class InGameView extends View {
   get #announcement() {
     return document.querySelector("#announcement");
   }
+
+  get #sendHint() {
+    return document.querySelector("#send-hint");
+  }
+
+  get #hintValueElement(){
+    return document.querySelector("#wm-hint");
+  }
+  get #associatedGuessElement() {
+    return document.querySelector("#wm-associated-guess");
+  }
+
 
   constructor() {
     super();
@@ -35,7 +48,9 @@ export default class InGameView extends View {
       (response) => response.text()
     );
 
-    document.querySelector("h1.master-title").innerHTML = "Maître des "+(role() === PlayerRole.WORD_MASTER ? "mots":"intuitions");
+    document.querySelector("h1.master-title").innerHTML =
+      "Maître des " +
+      (role() === PlayerRole.WORD_MASTER ? "mots" : "intuitions");
 
     let cardGrid = document.querySelector(".card-grid");
 
@@ -91,6 +106,7 @@ export default class InGameView extends View {
           `.card[data-row='${card.grid_row}'][data-column='${card.grid_col}'`
         )
         .classList.add(card.card_type.toLowerCase(), "word-master-card");
+        this.#sendHint.addEventListener("click", this.#makeGuess.bind(this));
     });
   }
 
@@ -98,5 +114,17 @@ export default class InGameView extends View {
     document.querySelector("#wm-inputs").style.display = "none";
     document.querySelector("#send-hint").style.display = "none";
     this.#announcement.innerHTML = "Choix en cours";
+    InGameService.subscribeToGameUpdates((data) => {
+      console.log(data);
+      // if (data.event === "role_chosen") {
+      //   this.#announcement.innerHTML = "Choix effectué";
+      //   document.querySelector("#wm-inputs").style.display = "block";
+      //   document.querySelector("#send-hint").style.display = "block";
+      // }
+    });
+  }
+
+  #makeGuess() {
+    GameService.makeHint(this.#hintValueElement.value, this.#associatedGuessElement.value);
   }
 }

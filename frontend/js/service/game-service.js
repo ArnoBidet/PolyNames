@@ -54,12 +54,33 @@ export default class GameService {
   }
 
   static async getCards() {
-    const response = await fetch(`${BASE_URL}api/${game_id()}/cards/${user_id()}`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
+    const response = await fetch(
+      `${BASE_URL}api/${game_id()}/cards/${user_id()}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
       }
-    });
+    );
+    return await response.json();
+  }
+
+  static async makeHint(hint, associated_guess) {
+    const response = await fetch(
+      `${BASE_URL}api/${game_id()}/hint`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          hint: hint,
+          associated_guess: associated_guess,
+          user_id: user_id()
+        }),
+      }
+    );
     return await response.json();
   }
 }
