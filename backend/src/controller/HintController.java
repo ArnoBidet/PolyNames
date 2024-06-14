@@ -8,9 +8,11 @@ import dao.HintDao;
 import dao.PlayerDao;
 import model.Card;
 import model.CardType;
+import model.CreateHintResponse;
 import model.GuessRequest;
 import model.Hint;
 import model.HintRequest;
+import model.MakeGuessResponse;
 import model.Player;
 import model.PlayerRole;
 import webserver.WebServerContext;
@@ -52,14 +54,11 @@ public class HintController {
             Hint last_hint = HintDao.getDao().getLastHint(game_id);
             int current_round = last_hint != null ? last_hint.game_round() + 1 : 0;
             HintDao.getDao().createHint(game_id, current_round, role, hint.associated_guess());
-            System.out.println("game_flow_" + other.user_id() + "_" + game_id);
-            context.getSSE().emit("game_flow_" + other.user_id() + "_" + game_id,
-                    "{\"hint\":\"" + hint.hint() + "\", \"associated_guess\":\"" + hint.associated_guess() + "\"}");
-            response.json(
-                    "{\"hint\":\"" + hint.hint() + "\", \"associated_guess\":\"" + hint.associated_guess() + "\"}");
+            CreateHintResponse createHintResponse = new CreateHintResponse(hint.hint(), hint.associated_guess());
+            context.getSSE().emit("word_master_update_" + other.user_id() + "_" + game_id, createHintResponse);
+            response.json(createHintResponse);
 
         } catch (SQLException e) {
-
             e.printStackTrace();
         }
 
@@ -70,15 +69,17 @@ public class HintController {
         WebServerRequest request = context.getRequest();
         WebServerResponse response = context.getResponse();
 
-        String user_id = request.getCookie("user");
         GuessRequest guess = request.extractBody(GuessRequest.class);
-        String game_id = request.getParam("game-code");
-
-        Player player;
+        String game_id = context.getRequest().getParam("game_id");
+        String user_id = guess.user_id();
         try {
-            player = PlayerDao.getDao().getPlayer(user_id);
+            List<Player> players = PlayerDao.getDao().getPlayerByGameCode(game_id);
+            Player sender = players.stream().filter(player -> player.user_id().equals(user_id)).findFirst()
+                    .orElse(null);
+            Player other = players.stream().filter(player -> !player.user_id().equals(user_id)).findFirst()
+                    .orElse(null);
 
-            String role = player.player_role();
+            String role = sender.player_role();
 
             if (!role.equals(PlayerRole.GUESS_MASTER)) {
                 response.badRequest("Mauvais rôle !");
@@ -90,12 +91,12 @@ public class HintController {
                 return;
             }
 
-            if (guess.row() < 5 && guess.row() >= 0 && guess.column() < 5 && guess.column() >= 0) {
+            if (guess.grid_row() >= 5 || guess.grid_row() < 0 || guess.grid_col() >= 5 && guess.grid_col() < 0) {
                 response.badRequest("En dehors du tableau !");
                 return;
             }
 
-            Card card = CardDao.getDao().getCard(game_id, guess.row(), guess.column());
+            Card card = CardDao.getDao().getCard(game_id, guess.grid_row(), guess.grid_col());
             if (card.is_discovered()) {
                 response.badRequest("Vous avez déjà proposé cette carte !");
                 return;
@@ -114,7 +115,9 @@ public class HintController {
 
             HintDao.getDao().updateHint(last_hint.game_id(), last_hint.game_round(), found_cards, is_done);
 
-            // @TODO finir la réponse avec le sse
+            MakeGuessResponse makeGuessResponse = new MakeGuessResponse(card.card_type(), card.grid_col(), card.grid_row());
+            context.getSSE().emit("guess_master_update_" + other.user_id() + "_" + game_id, makeGuessResponse);
+            response.json(makeGuessResponse);
 
         } catch (SQLException e) {
 

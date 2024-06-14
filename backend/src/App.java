@@ -32,7 +32,15 @@ public class App {
         webserver.getRouter().post(
                 "/api/:game_id/hint",
                 (WebServerContext context) -> {
-                    HintController.createHint(context);;
+                    HintController.createHint(context);
+                    ;
+                });
+
+        webserver.getRouter().post(
+                "/api/:game_id/guess",
+                (WebServerContext context) -> {
+                    HintController.makeGuess(context);
+                    ;
                 });
 
         webserver.listen(port_number);
