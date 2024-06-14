@@ -22,9 +22,9 @@ public class HintController {
         WebServerRequest request = context.getRequest();
         WebServerResponse response = context.getResponse();
 
-        String user_id = request.getCookie("user");
         HintRequest hint = request.extractBody(HintRequest.class);
-        String game_id = request.getParam("game-code");
+        String game_id = context.getRequest().getParam("game_id");
+        String user_id = hint.user_id();
 
         Player player;
         try {
@@ -32,21 +32,23 @@ public class HintController {
 
             String role = player.player_role();
 
-            if (!role.equals(PlayerRole.GUESS_MASTER)) {
+            if (!role.equals(PlayerRole.WORD_MASTER)) {
                 response.forbidden("Mauvais rôle !");
             }
             if (hint.hint().indexOf(" ") != -1 || hint.hint().length() > 27) {
-                response.badRequest("Mauvais mot !");
+                response.badRequest("Format incorrect !");
             }
             if (hint.associated_guess() > 8 || hint.associated_guess() < 1) {
                 response.badRequest("Mauvais nombre d'indices !");
             }
+            if (hint.associated_guess()<=0 )|| hint.associated_guess() >= 9){
+                response.badRequest("Mauvais nombre de cartes associées, doit être en 1 et 8 !");
+            }
 
             Hint last_hint = HintDao.getDao().getLastHint(game_id);
-
-            HintDao.getDao().createHint(game_id, 0, role, last_hint != null ? last_hint.game_round() + 1 : 0);
-
-            // @TODO finir la réponse avec le sse
+            int current_round = last_hint != null ? last_hint.game_round()+1 : 0;
+            HintDao.getDao().createHint(game_id, 0, role, current_round);
+            context.getSSE().emit("game_flow_" + user_id + "_" + game_id, "{\"hint\":\"" + hint.hint() + "\", \"associated_guess\":\""+hint.associated_guess()+"\"}");
 
         } catch (SQLException e) {
 
@@ -94,13 +96,12 @@ public class HintController {
             int found_cards = last_hint.found_cards();
             boolean is_done = last_hint.is_done();
 
-            if(card.card_type()==CardType.KILLER){
-                //@TODO partie terminée 
+            if (card.card_type() == CardType.KILLER) {
+                // @TODO partie terminée
                 return;
-            }
-            else if(card.card_type()==CardType.GUESS){
+            } else if (card.card_type() == CardType.GUESS) {
                 found_cards++;
-                is_done = last_hint.associated_cards()+1 == found_cards;
+                is_done = last_hint.associated_cards() + 1 == found_cards;
             }
 
             HintDao.getDao().updateHint(last_hint.game_id(), last_hint.game_round(), found_cards, is_done);

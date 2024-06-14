@@ -24,7 +24,7 @@ public class PlayerDao extends GenericDao {
 
     public Player getPlayer(String user_id) throws SQLException {
         PreparedStatement statement = this.database
-                .prepareStatement("SELECT user_id, host, player_role, game_id FROM player WHERE id = ?");
+                .prepareStatement("SELECT user_id, host, player_role, game_id FROM player WHERE user_id = ?");
         statement.setString(1, user_id);
         ResultSet rs = statement.executeQuery();
         while (rs.next())

@@ -1,5 +1,5 @@
 import controller.GameController;
-// import controller.HintController;
+import controller.HintController;
 import webserver.WebServer;
 import webserver.WebServerContext;
 
@@ -28,6 +28,11 @@ public class App {
                 "/api/:game_id/cards/:user_id",
                 (WebServerContext context) -> {
                     GameController.getCards(context);
+                });
+        webserver.getRouter().post(
+                "/api/:game_id/hint",
+                (WebServerContext context) -> {
+                    HintController.createHint(context);;
                 });
 
         webserver.listen(port_number);

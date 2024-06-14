@@ -54,7 +54,7 @@ public class HintDao extends GenericDao{
 
     public Hint getLastHint(String game_id)throws SQLException{
 
-        PreparedStatement statement = this.database.prepareStatement("SELECT * FROM Hint WHERE game_id = ? ORDER BY game_round DESC LIMIT 1");
+        PreparedStatement statement = this.database.prepareStatement("SELECT * FROM hint WHERE game_id = ? ORDER BY game_round DESC LIMIT 1");
         statement.setString(1, game_id);
         ResultSet results = statement.executeQuery();
         
@@ -66,7 +66,7 @@ public class HintDao extends GenericDao{
     }
 
     public void deleteHint(String game_id) throws SQLException {
-        PreparedStatement statement = this.database.prepareStatement("DELETE FROM Hint WHERE game_id = ?");
+        PreparedStatement statement = this.database.prepareStatement("DELETE FROM hint WHERE game_id = ?");
         statement.setString(1, game_id);
         statement.executeUpdate();
     }
