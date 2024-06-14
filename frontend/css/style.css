@@ -143,9 +143,14 @@ body:has(.master-title) {
   transition: transform 0.5s cubic-bezier(0.17, 0.67, 0, 1.08);
   position: relative;
   color: black;
-  cursor: pointer;
+  cursor: default;
   user-select: none;
 }
+
+.card.clickable {
+  cursor: pointer;
+}
+
 .card img {
   width: 100%;
   border-radius: 5px;
@@ -197,7 +202,7 @@ body:has(.master-title) {
   transform: translateY(0) translateX(0);
 }
 
-.card:hover:not(.revealed):not(.word-master-card) {
+.card.clickable:hover:not(.revealed):not(.word-master-card) {
   --angle: 5deg;
   animation: shake 0.3s;
 }
@@ -288,12 +293,18 @@ button:hover:not(:disabled):not(.word-master-card) {
 }
 
 #wm-inputs {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+#wm-inputs .fields{
   display: grid;
   grid-template-columns: 2fr 1fr;
   gap: 1rem;
 }
 
-#wm-inputs input {
+#wm-inputs .fields input {
   padding: 10px;
   border: none;
   border-radius: 5px;
@@ -303,7 +314,7 @@ button:hover:not(:disabled):not(.word-master-card) {
   background-color: rgba(255, 255, 255);
   color: black;
 }
-#wm-inputs input[type="number"] {
+#wm-inputs .fields input[type="number"] {
   max-width: 8rem;
 }
 
@@ -339,7 +350,7 @@ button:hover:not(:disabled):not(.word-master-card) {
   border-radius: 0.25rem;
 }
 
-#input-errors {
+#input-errors:has(*) {
   color: white;
   font-size: 1.5rem;
   padding: 0.75rem;
