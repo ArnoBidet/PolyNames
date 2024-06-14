@@ -203,6 +203,8 @@ export default class InGameView extends View {
     this.#newGuess(data);
     if (data.card_type === "KILLER") {
       this.#onDeath();
+    } else if (data.card_type === "GUESS") {
+      this.#onFound();
     }
   }
 
@@ -216,11 +218,20 @@ export default class InGameView extends View {
       this.#associatedGuessElement.disabled = true;
       this.#announcement.innerHTML = `L'autre maître des mots doit deviner le mot associé à l'indice : <br>"${data.hint}"`;
     }else {
-      this.#announcement.innerHTML = `Le maître des mots a donné un indice : <br>"${data.hint}"`;
+      this.#announcement.innerHTML = `Indice : "${data.hint}<br>"`;
       this.#toggleCardClickability(true);
     }
   }
 
+  #onFound(){
+    this.score = document.querySelector("#remaining");
+    this.score.innerHTML = parseInt(this.score.innerHTML) - 1;
+    if(this.score.innerHTML == 0){
+      this.score = document.querySelector("span#score");
+      this.root.innerHTML = "Vous avez gagné !<br> Votre score est de " + this.score.innerHTML + "<br> Vous pouvez recommencer en cliquant <a href='/frontend/'><button class=\"primary\">ici</button></a>";
+      this.#toggleCardClickability();
+    }
+  }
   #onDeath() {
     this.score = document.querySelector("span#score");
     this.root.innerHTML = "Vous avez perdu !<br> Votre score est de " + this.score.innerHTML + "<br> Vous pouvez recommencer en cliquant <a href='/frontend/'><button class=\"primary\">ici</button></a>";
