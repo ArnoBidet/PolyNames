@@ -125,36 +125,21 @@ export default class InGameView extends View {
     this.#associatedGuessElement.addEventListener("input", this.#evaluateInput.bind(this));
     this.#evaluateInput();
     this.#sendHint.addEventListener("click", this.#makeHint.bind(this));
-    InGameService.subscribeGuessMasterUpdates((data) => {
-      this.#newGuess(data);
-    });
+    InGameService.subscribeGuessMasterUpdates(this.#onGuessResponse.bind(this));
   }
 
   #renderGuessMaster() {
     this.#announcement.innerHTML = "En attente de l'indice du maître des mots";
     this.#wmInputsContainer.style.display = "none";
-    InGameService.subscribeWordMasterUpdates((data) => {
-      this.#newHint(data);
-      console.log(data);
-      this.#announcement.innerHTML = `Le maître des mots a donné un indice : <br>"${data.hint}"`;
-      this.#toggleCardClickability(true);
-    });
+    InGameService.subscribeWordMasterUpdates(this.#onHintResponse.bind(this));
   }
 
   #makeHint() {
-    GameService.makeHint(this.#hintElement.value, this.#associatedGuessElement.value).then(data => {
-      this.#newHint(data);
-      this.#hintElement.value = "";
-      this.#associatedGuessElement.value = "";
-      this.#sendHint.disabled = true;
-      this.#hintElement.disabled = true
-      this.#associatedGuessElement.disabled = true;
-    });
+    GameService.makeHint(this.#hintElement.value, this.#associatedGuessElement.value).then(this.#onHintResponse.bind(this));
   }
   #makeGuess(row, col) {
-    GameService.makeGuess(row, col).then(data => {
-      this.#newGuess(data);
-    });
+    GameService.makeGuess(row, col).then(this.#onGuessResponse.bind(this));
+
   }
 
   #newHint(data) {
@@ -164,8 +149,11 @@ export default class InGameView extends View {
     hint.innerHTML = data.hint;
     let associated_guess = document.createElement("span");
     associated_guess.innerHTML = data.associated_guess;
+    let found_cards = document.createElement("span");
+    found_cards.innerHTML = 0;
     newHint.append(hint);
     newHint.append(associated_guess);
+    newHint.append(found_cards);
     this.#hintContainer.prepend(newHint);
   }
 
@@ -181,7 +169,7 @@ export default class InGameView extends View {
   #evaluateInput() {
     this.#inputErrorsContainer.innerHTML = "";
     this.#hintElement.value = this.#hintElement.value.trim();
-    this.#hintElement.value =this.#hintElement.value.replace(/[^a-zA-Z-]+/g, '')
+    this.#hintElement.value = this.#hintElement.value.replace(/[^a-zA-Z-]+/g, '')
     if (this.#hintElement.value === "" || this.#associatedGuessElement.value === "") {
       this.#sendHint.disabled = true;
     } else {
@@ -209,5 +197,33 @@ export default class InGameView extends View {
         card.removeEventListener("click", () => this.#makeGuess(card.dataset.row, card.dataset.column));
       }
     });
+  }
+
+  #onGuessResponse(data) {
+    this.#newGuess(data);
+    if (data.card_type === "KILLER") {
+      this.#onDeath();
+    }
+  }
+
+  #onHintResponse(data) {
+    this.#newHint(data);
+    if(role() === PlayerRole.WORD_MASTER) {
+      this.#hintElement.value = "";
+      this.#associatedGuessElement.value = "";
+      this.#sendHint.disabled = true;
+      this.#hintElement.disabled = true
+      this.#associatedGuessElement.disabled = true;
+      this.#announcement.innerHTML = `L'autre maître des mots doit deviner le mot associé à l'indice : <br>"${data.hint}"`;
+    }else {
+      this.#announcement.innerHTML = `Le maître des mots a donné un indice : <br>"${data.hint}"`;
+      this.#toggleCardClickability(true);
+    }
+  }
+
+  #onDeath() {
+    this.score = document.querySelector("span#score");
+    this.root.innerHTML = "Vous avez perdu !<br> Votre score est de " + this.score.innerHTML + "<br> Vous pouvez recommencer en cliquant <a href='/frontend/'><button class=\"primary\">ici</button></a>";
+    this.#toggleCardClickability();
   }
 }
