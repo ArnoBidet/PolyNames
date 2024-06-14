@@ -111,6 +111,9 @@ export default class InGameView extends View {
         )
         .classList.add(card.card_type.toLowerCase(), "word-master-card");
     });
+    this.#hintElement.addEventListener("input", this.#evaluateInput.bind(this));
+    this.#associatedGuessElement.addEventListener("input", this.#evaluateInput.bind(this));
+    this.#evaluateInput();
     this.#sendHint.addEventListener("click", this.#makeGuess.bind(this));
   }
 
@@ -140,5 +143,22 @@ export default class InGameView extends View {
     newHint.append(hint);
     newHint.append(associated_guess);
     this.#hintContainer.prepend(newHint);
+  }
+
+  #evaluateInput() {
+    this.#inputErrorsContainer.innerHTML = "";
+    if (this.#hintElement.value === "" || this.#associatedGuessElement.value === "") {
+      this.#sendHint.disabled = true;
+    } else {
+      this.#sendHint.disabled = false;
+    }
+    if ((this.#associatedGuessElement.value <= 0 || this.#associatedGuessElement.value > 8) && this.#associatedGuessElement.value !== "") {
+      this.#sendHint.disabled = true;
+      this.#inputErrorsContainer.innerHTML += "<span>Le nombre associé doit être compris entre 1 et 8</span>";
+    }
+    if (this.#hintElement.value.length > 30) {
+      this.#sendHint.disabled = true;
+      this.#inputErrorsContainer.innerHTML += "<span>Le mot doit contenir moins de 30 caractères</span>";
+    }
   }
 }
